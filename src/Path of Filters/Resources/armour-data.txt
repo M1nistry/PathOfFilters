@@ -1,0 +1,358 @@
+Plate Vest
+Shabby Jerkin
+Simple Robe
+Scale Vest
+Padded Vest
+Chainmail Vest
+Chestplate
+Chainmail Tunic
+Light Brigandine
+Strapped Leather
+Oiled Vest
+Silken Vest
+Buckskin Tunic
+Copper Plate
+Ringmail Coat
+Scale Doublet
+Scholar's Robe
+Padded Jacket
+Chainmail Doublet
+War Plate
+Infantry Brigandine
+Oiled Coat
+Wild Leather
+Silken Garb
+Scarlet Raiment
+Full Ringmail
+Full Scale Armour
+Mage's Vestment
+Full Leather
+Full Plate
+Waxed Garb
+Soldier's Brigandine
+Silk Robe
+Arena Plate
+Full Chainmail
+Sun Leather
+Field Lamellar
+Cabalist Regalia
+Thief's Garb
+Holy Chainmail
+Bone Armour
+Lordly Plate
+Bronze Plate
+Eelskin Tunic
+Sage's Robe
+Wyrmscale Doublet
+Latticed Ringmail
+Quilted Jacket
+Frontier Leather
+Battle Plate
+Silken Wrap
+Hussar Brigandine
+Crusader Chainmail
+Sleek Coat
+Sun Plate
+Glorious Leather
+Conjurer's Vestment
+Full Wyrmscale
+Ornate Ringmail
+Crimson Raiment
+Coronal Leather
+Spidersilk Robe
+Colosseum Plate
+Commander's Brigandine
+Chain Hauberk
+Lacquered Garb
+Destroyer Regalia
+Majestic Plate
+Cutthroat's Garb
+Battle Lamellar
+Devout Chainmail
+Crypt Armour
+Golden Plate
+Savant's Robe
+Sharkskin Tunic
+Dragonscale Doublet
+Loricated Ringmail
+Destiny Leather
+Crusader Plate
+Necromancer Silks
+Sentinel Jacket
+Desert Brigandine
+Conquest Chainmail
+Exquisite Leather
+Varnished Coat
+Occultist's Vestment
+Astral Plate
+Full Dragonscale
+Elegant Ringmail
+Blood Raiment
+Widowsilk Robe
+Zodiac Leather
+Gladiator Plate
+General's Brigandine
+Saint's Hauberk
+Vaal Regalia
+Glorious Plate
+Assassin's Garb
+Sadist Garb
+Triumphant Lamellar
+Saintly Chainmail
+Carnal Armour
+Sacrificial Garb
+Iron Greaves
+Wool Shoes
+Rawhide Boots
+Chain Boots
+Wrapped Boots
+Leatherscale Boots
+Steel Greaves
+Velvet Slippers
+Goathide Boots
+Ringmail Boots
+Strapped Boots
+Ironscale Boots
+Deerskin Boots
+Silk Slippers
+Plated Greaves
+Clasped Boots
+Mesh Boots
+Bronzescale Boots
+Scholar Boots
+Reinforced Greaves
+Shackled Boots
+Nubuck Boots
+Steelscale Boots
+Riveted Boots
+Antique Greaves
+Satin Slippers
+Eelskin Boots
+Zealot Boots
+Trapper Boots
+Serpentscale Boots
+Sharkskin Boots
+Samite Slippers
+Ancient Greaves
+Ambush Boots
+Soldier Boots
+Wyrmscale Boots
+Conjurer Boots
+Goliath Greaves
+Shagreen Boots
+Carnal Boots
+Legion Boots
+Hydrascale Boots
+Arcanist Slippers
+Stealth Boots
+Vaal Greaves
+Assassin's Boots
+Crusader Boots
+Dragonscale Boots
+Sorcerer Boots
+Titan Greaves
+Murder Boots
+Slink Boots
+Iron Gauntlets
+Rawhide Gloves
+Wool Gloves
+Fishscale Gauntlets
+Wrapped Mitts
+Chain Gloves
+Goathide Gloves
+Plated Gauntlets
+Velvet Gloves
+Golden Bracers
+Ironscale Gauntlets
+Strapped Mitts
+Ringmail Gloves
+Deerskin Gloves
+Bronze Gauntlets
+Silk Gloves
+Bronzescale Gauntlets
+Clasped Mitts
+Mesh Gloves
+Nubuck Gloves
+Steel Gauntlets
+Trapper Mitts
+Embroidered Gloves
+Steelscale Gauntlets
+Riveted Gloves
+Eelskin Gloves
+Antique Gauntlets
+Satin Gloves
+Zealot Gloves
+Serpentscale Gauntlets
+Sharkskin Gloves
+Ambush Mitts
+Samite Gloves
+Ancient Gauntlets
+Wyrmscale Gauntlets
+Carnal Mitts
+Soldier Gloves
+Goliath Gauntlets
+Shagreen Gloves
+Conjurer Gloves
+Legion Gloves
+Assassin's Mitts
+Hydrascale Gauntlets
+Arcanist Gloves
+Stealth Gloves
+Vaal Gauntlets
+Crusader Gloves
+Murder Mitts
+Dragonscale Gauntlets
+Sorcerer Gloves
+Titan Gauntlets
+Slink Gloves
+Iron Hat
+Vine Circlet
+Leather Cap
+Battered Helm
+Scare Mask
+Rusted Coif
+Cone Helmet
+Iron Circlet
+Tricorne
+Plague Mask
+Soldier Helmet
+Sallet
+Torture Cage
+Iron Mask
+Barbute Helmet
+Leather Hood
+Great Helmet
+Visored Sallet
+Close Helmet
+Tribal Circlet
+Festival Mask
+Wolf Pelt
+Crusader Helmet
+Gilded Sallet
+Bone Circlet
+Golden Mask
+Gladiator Helmet
+Secutor Helm
+Aventail Helmet
+Raven Mask
+Lunaris Circlet
+Reaver Helmet
+Hunter Hood
+Fencer Helm
+Zealot Helmet
+Callous Mask
+Noble Tricorne
+Steel Circlet
+Siege Helmet
+Lacquered Helmet
+Regicide Mask
+Great Crown
+Necromancer Circlet
+Ursine Pelt
+Samite Helmet
+Harlequin Mask
+Fluted Bascinet
+Magistrate Crown
+Solaris Circlet
+Silken Hood
+Ezomyte Burgonet
+Vaal Mask
+Prophet Crown
+Pig-Faced Bascinet
+Sinner Tricorne
+Mind Cage
+Royal Burgonet
+Nightmare Bascinet
+Deicide Mask
+Praetor Crown
+Eternal Burgonet
+Hubris Circlet
+Lion Pelt
+Splintered Tower Shield
+Goathide Buckler
+Twig Spirit Shield
+Rotted Round Shield
+Spiked Bundle
+Corroded Tower Shield
+Plank Kite Shield
+Pine Buckler
+Yew Spirit Shield
+Rawhide Tower Shield
+Fir Round Shield
+Driftwood Spiked Shield
+Linden Kite Shield
+Bone Spirit Shield
+Painted Buckler
+Cedar Tower Shield
+Studded Round Shield
+Alloyed Spike Shield
+Reinforced Kite Shield
+Hammered Buckler
+Tarnished Spirit Shield
+Copper Tower Shield
+Layered Kite Shield
+Burnished Spike Shield
+Scarlet Round Shield
+Jingling Spirit Shield
+War Buckler
+Reinforced Tower Shield
+Ornate Spiked Shield
+Splendid Round Shield
+Brass Spirit Shield
+Ceremonial Kite Shield
+Gilded Buckler
+Painted Tower Shield
+Walnut Spirit Shield
+Oak Buckler
+Redwood Spiked Shield
+Maple Round Shield
+Buckskin Tower Shield
+Etched Kite Shield
+Ivory Spirit Shield
+Enameled Buckler
+Mahogany Tower Shield
+Compound Spiked Shield
+Spiked Round Shield
+Ancient Spirit Shield
+Corrugated Buckler
+Steel Kite Shield
+Bronze Tower Shield
+Crimson Round Shield
+Chiming Spirit Shield
+Polished Spiked Shield
+Laminated Kite Shield
+Battle Buckler
+Girded Tower Shield
+Thorium Spirit Shield
+Golden Buckler
+Sovereign Spiked Shield
+Baroque Round Shield
+Angelic Kite Shield
+Crested Tower Shield
+Lacewood Spirit Shield
+Ironwood Buckler
+Alder Spike Shield
+Shagreen Tower Shield
+Teak Round Shield
+Branded Kite Shield
+Fossilized Spirit Shield
+Lacquered Buckler
+Ebony Tower Shield
+Spiny Round Shield
+Ezomyte Spiked Shield
+Vaal Spirit Shield
+Champion Kite Shield
+Vaal Buckler
+Ezomyte Tower Shield
+Harmonic Spirit Shield
+Mosaic Kite Shield
+Mirrored Spiked Shield
+Crusader Buckler
+Cardinal Round Shield
+Colossal Tower Shield
+Archon Kite Shield
+Titanium Spirit Shield
+Imperial Buckler
+Elegant Round Shield
+Supreme Spiked Shield
+Pinnacle Tower Shield

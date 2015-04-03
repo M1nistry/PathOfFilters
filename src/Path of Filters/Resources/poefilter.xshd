@@ -1,0 +1,129 @@
+﻿<?xml version="1.0"?>
+<!-- Shades of Red-Brown: #a31515, #cf4315, #ffb96e, #ffdc95 -->
+<!-- Shades of Bright-Blue: #0077dc #008fe4 #8dbbdc #8de8ff -->
+<SyntaxDefinition name="SQL" extensions=".sql"
+                  xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <!-- T-SQL Reference: http://msdn.microsoft.com/de-de/library/ms189826%28v=sql.90%29.aspx -->
+
+  <Color name="Digits"      foreground="Teal" exampleText="3"/>
+
+  <Color name="RGB"         background="LightGray" exampleText="255 255 255"/>
+  <Color name="Comment" foreground="Green" exampleText="string text = &quot;Hello, World!&quot;"/>
+  <Color name="Punctuation" foreground="Red" exampleText="string text = &quot;Hello, World!&quot;"/>
+
+  <Color name="Quote" foreground="#993" exampleText="string text = &quot;Hello, World!&quot;"/>
+  
+  <Color name="Operators" foreground="Red" exampleText="&gt;" />
+  
+  <Color name="Conditions" fontWeight="bold" foreground="Blue" exampleText="Rarity"/>
+  <Color name="Colors" fontWeight="bold" foreground="Blue" exampleText="SetBackgroundColor"/>
+  <Color name="Alert" fontWeight="bold" foreground="Blue" exampleText="PlayAlertSound"/>
+  
+  <Color name="Class" foreground="Pink" exampleText="Currency"/>
+  
+  <Color name="Show" fontWeight="bold" foreground="Red" exampleText="Show"/>
+  <Color name="Hide" fontWeight="bold" foreground="Gray" exampleText="Hide"/>
+
+  <Color name="LineComment"                 foreground="Gray" />
+
+
+
+  <RuleSet  ignoreCase="true">
+
+    <Span color="Quote" multiline="false">
+      <Begin>"</Begin>
+      <End>"</End>
+    </Span>
+
+    <Span color="LineComment" multiline="false">
+      <Begin>\#</Begin>
+    </Span>
+
+    <Keywords color="Show">
+      <Word>Show</Word>
+    </Keywords>
+
+    <Keywords color="Hide">
+      <Word>Hide</Word>
+    </Keywords>
+
+    <Keywords color="Operators">
+      <Word>&gt;</Word>
+      <Word>&lt;</Word>
+      <Word>=</Word>
+    </Keywords>
+
+    <Keywords color="Conditions" >
+      <Word>ItemLevel</Word>
+      <Word>DropLevel</Word>
+      <Word>Quality</Word>
+      <Word>Rarity</Word>
+      <Word>Class</Word>
+      <Word>BaseType</Word>
+      <Word>Sockets</Word>
+      <Word>LinkedSockets</Word>
+      <Word>SocketGroup</Word>
+    </Keywords>
+
+    <Keywords color="Colors">
+      <Word>SetBorderColor</Word>
+      <Word>SetTextColor</Word>
+      <Word>SetBackgroundColor</Word>
+    </Keywords>
+
+    <Keywords color="Alert">
+      <Word>PlayAlertSound</Word>
+    </Keywords>
+
+    <Rule color="Digits">
+      <!--^*[0-9] -->
+      ^[\d]+$
+    </Rule>
+
+    <Rule color="RGB">
+      \d+\d{0,3}\s+\d+\d{0,3}\s\d+\d{0,3}
+    </Rule>
+
+    <Keywords color="Class">
+      <Word>Life Flasks</Word>
+      <Word>Mana Flasks</Word>
+      <Word>Hybrid Flasks</Word>
+      <Word>Currency</Word>
+      <Word>Amulets</Word>
+      <Word>Rings</Word>
+      <Word>Claws</Word>
+      <Word>Daggers</Word>
+      <Word>Wands</Word>
+      <Word>One Hand Swords</Word>
+      <Word>Thrusting One Hand Swords</Word>
+      <Word>One Hand Axes</Word>
+      <Word>One Hand Maces</Word>
+      <Word>Bows</Word>
+      <Word>Staves</Word>
+      <Word>Two Hand Swords</Word>
+      <Word>Two Hand Axes</Word>
+      <Word>Two Hand Maces</Word>
+      <Word>Active Skill Gems</Word>
+      <Word>Support Skill Gems</Word>
+      <Word>Quivers</Word>
+      <Word>Belts</Word>
+      <Word>Gloves</Word>
+      <Word>Boots</Word>
+      <Word>Body Armours</Word>
+      <Word>Helmets</Word>
+      <Word>Shields</Word>
+      <Word>Stackable Currency</Word>
+      <Word>Quest Items</Word>
+      <Word>Sceptres</Word>
+      <Word>Utility Flasks</Word>
+      <Word>Maps</Word>
+      <Word>Fishing Rods</Word>
+      <Word>Map Fragments</Word>
+      <Word>Hideout Doodads</Word>
+      <Word>Microtransactions</Word>
+    </Keywords>
+
+  </RuleSet>
+
+</SyntaxDefinition>
