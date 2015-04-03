@@ -50,13 +50,10 @@
                                 </Track.DecreaseRepeatButton>
                             </Track>
                         </Grid>
-
                         <ControlTemplate.Triggers>
                             <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                                <Setter Value="{DynamicResource ButtonSelectBrush}" TargetName="Thumb" Property="Background" />
                             </Trigger>
                             <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
-                                <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background" />
                             </Trigger>
 
                             <Trigger Property="IsEnabled" Value="false">
@@ -73,6 +70,10 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <Style x:Key="ListViewHeader" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
         </Style>
     </Application.Resources>
 </Application>

@@ -1,5 +1,6 @@
-﻿using System.IO;
+﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 
@@ -8,10 +9,12 @@ namespace PathOfFilters
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         CompletionWindow _completionWindow;
         private readonly CompletionLists _completionList = new CompletionLists();
+        private readonly SqlWrapper _sql;
+        private long _currentFilter;
 
         public MainWindow()
         {
@@ -34,15 +37,26 @@ namespace PathOfFilters
                     AvalonFilter.TextArea.KeyDown += AvalonFilter_KeyDown;
                 }
             }
-            LoadFilter();
+            _sql = new SqlWrapper();
+            
+            UpdateFilters();
+            TestFilter.FilterListView.Items.Add(new Filter {Name = "ItemLevel", Tag = ">70"});
+            TestFilter.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
+            TestFilter.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
+            TestFilter.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
+            TestFilter.FilterListView.Items.Add(new Filter { Name = "Class", Tag = "'One Hand Axe'" });
+            TestFilter.FilterListView.Items.Add(new Filter { Name = "BaseType", Tag = "'Siege Axe'" });
+            TestFilter.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
+            TestFilter.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
+            TestFilter.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
         }
 
-        private void LoadFilter()
+        private void UpdateFilters()
         {
-            using (var streamReader = new StreamReader(@"C:\filter.txt"))
-            {
-                AvalonFilter.Text = streamReader.ReadToEnd();
-            }
+            ComboBoxFilters.ItemsSource = null;
+            ComboBoxFilters.ItemsSource = _sql.GetFilters();
+            ComboBoxFilters.DisplayMemberPath = "Name";
+            ComboBoxFilters.SelectedValuePath = "Id"; 
         }
 
         private void AvalonFilter_KeyDown(object sender, KeyEventArgs e)
@@ -67,22 +81,6 @@ namespace PathOfFilters
 
         private void AvalonFilter_TextEntered(object sender, TextCompositionEventArgs e)
         {
-            if (e.Text == ".")
-            {
-                // Open code completion after the user has pressed dot:
-                _completionWindow = new CompletionWindow(AvalonFilter.TextArea);
-                var data = _completionWindow.CompletionList.CompletionData;
-                var stringarray = new[] {"Test1", "Hello World", "Show"};
-                foreach (var item in stringarray)
-                {
-                    data.Add(new CodeCompletion(item));
-                }
-                _completionWindow.Show();
-                _completionWindow.Closed += delegate
-                {
-                    _completionWindow = null;
-                };
-            }
             if (e.Text == "\"")
             {
                 _completionWindow = new CompletionWindow(AvalonFilter.TextArea);
@@ -107,6 +105,55 @@ namespace PathOfFilters
             {
                 _completionWindow.CompletionList.RequestInsertion(e);
             }
+        }
+
+        private void NewFilter_MouseDown(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("sa");
+        }
+
+        private void ButtonAddFilter_Click(object sender, RoutedEventArgs e)
+        {
+            _currentFilter = _sql.CreateFilter();
+            if (_currentFilter <= 0) return;
+            TextBoxName.Text = "New Filter";
+
+        }
+
+        private void ComboBoxFilters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //TODO: Check for unsaved filter changes
+            var selectedFilter = ((Filter) ComboBoxFilters.SelectedItem);
+            if (selectedFilter == null) return;
+            TextBoxName.Text = selectedFilter.Name;
+            TextBoxTag.Text = selectedFilter.Tag;
+            AvalonFilter.Text = selectedFilter.FilterValue;
+        }
+
+        private void ButtonApply_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedFilter = ((Filter) ComboBoxFilters.SelectedItem);
+            if (selectedFilter == null) return;
+            if (_sql.UpdateFilter(selectedFilter.Id, TextBoxName.Text, TextBoxTag.Text, AvalonFilter.Text))
+            {
+                LabelStatus.Content = String.Format("Status: Successfully updated filter {0}", TextBoxName.Text);
+            }
+            UpdateFilters();
+            ComboBoxFilters.SelectedValue = selectedFilter.Id;
+        }
+
+        private void TestFilter_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+        
+        }
+
+        private void TestFilter_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        private void TextBox_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine("oj");
         }
     }
 }

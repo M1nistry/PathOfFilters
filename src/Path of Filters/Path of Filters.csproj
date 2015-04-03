@@ -97,7 +97,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Filter.cs" />
+    <Compile Include="FilterObject.xaml.cs">
+      <DependentUpon>FilterObject.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SqlWrapper.cs" />
+    <Page Include="FilterObject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
