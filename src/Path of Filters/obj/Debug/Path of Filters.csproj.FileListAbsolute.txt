@@ -1,0 +1,14 @@
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\bin\Debug\Path of Filters.exe
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\bin\Debug\Path of Filters.pdb
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\Path of Filters.csprojResolveAssemblyReference.cache
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\MainWindow.baml
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\MainWindow.g.cs
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\App.g.cs
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\Path of Filters_MarkupCompile.cache
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\Path of Filters.g.resources
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\Path_of_Filters.Properties.Resources.resources
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\Path of Filters.csproj.GenerateResource.Cache
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\Path of Filters.exe
+c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\Path of Filters.pdb
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters.exe
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters.pdb

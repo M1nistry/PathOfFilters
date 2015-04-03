@@ -1,0 +1,10 @@
+﻿<Window x:Class="Path_of_Filters.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Path of Filters | 0.1a" Height="448" Width="706">
+    <Grid>
+    	<GridSplitter HorizontalAlignment="Left" Height="417" Margin="125,10,0,-10" VerticalAlignment="Top" Width="6"/>
+    	<TextBox HorizontalAlignment="Left" Height="385" Margin="131,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="557" AcceptsReturn="True"/>
+        
+    </Grid>
+</Window>
