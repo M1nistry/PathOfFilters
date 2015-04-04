@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 
 namespace PathOfFilters
@@ -15,6 +16,8 @@ namespace PathOfFilters
         private readonly CompletionLists _completionList = new CompletionLists();
         private readonly SqlWrapper _sql;
         private long _currentFilter;
+
+        private double scaleX = 1, scaleY = 1;
 
         public MainWindow()
         {
@@ -37,6 +40,7 @@ namespace PathOfFilters
                     AvalonFilter.TextArea.KeyDown += AvalonFilter_KeyDown;
                 }
             }
+
             _sql = new SqlWrapper();
             
             UpdateFilters();
@@ -49,6 +53,15 @@ namespace PathOfFilters
             TestFilter.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
             TestFilter.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
             TestFilter.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "ItemLevel", Tag = ">70" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "Class", Tag = "'One Hand Axe'" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "BaseType", Tag = "'Siege Axe'" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
+            TestFilter2.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
         }
 
         private void UpdateFilters()
@@ -142,18 +155,39 @@ namespace PathOfFilters
             ComboBoxFilters.SelectedValue = selectedFilter.Id;
         }
 
-        private void TestFilter_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void FilterGrid_MouseEnter(object sender, MouseEventArgs e)
         {
-        
+            FilterGrid.Focus();
         }
 
-        private void TestFilter_MouseDown(object sender, MouseButtonEventArgs e)
+        private void FilterGrid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (scaleX > 2 || scaleY > 2)
+            {
+                scaleX = 1;
+                scaleY = 1;
+            }
+
+            if (e.Delta > 0)
+            {
+                if (scaleX > 1.8 || scaleY > 1.8) return;
+                scaleX = scaleX + 0.1;
+                scaleY = scaleY + 0.1;
+            }
+            else
+            {
+                if (scaleX <= 0.6 || scaleY <= 0.6) return;
+                scaleX = scaleX - 0.1;
+                scaleY = scaleY - 0.1;
+            }
+            Console.WriteLine("ScaleX " + scaleX + " ScaleY " + scaleY);
+            var scaletransform = new ScaleTransform
+            {
+                ScaleX = scaleX,
+                ScaleY = scaleY
+            };
+            FilterGrid.RenderTransform = scaletransform;
         }
 
-        private void TextBox_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Console.WriteLine("oj");
-        }
     }
 }

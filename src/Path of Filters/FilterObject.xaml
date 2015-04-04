@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="150">
-    <Grid Background="#FF9E9E9E">
-        <Border x:Name="UserBorder" BorderBrush="#FFBFBFBF" BorderThickness="1">
-            <Grid>
-                <ListView x:Name="FilterListView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" MouseDown="FilterListView_MouseDown" Margin="0,0,-1,-1" >
+    <Grid>
+        <Border x:Name="UserBorder" BorderBrush="Black" BorderThickness="0.5" Margin="0">
+            <Grid MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave" Margin="0">
+                <ListView x:Name="FilterListView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Margin="0,0,0,0" FontSize="9" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" BorderBrush="#00828790" >
                     <ListView.GroupStyle>
                         <GroupStyle AlternationCount="1"/>
                     </ListView.GroupStyle>
@@ -21,8 +21,11 @@
                     <TextBlock Height="100" TextWrapping="Wrap" Text="TextBlock" Width="100"/>
 
                 </ListView>
+                <Border x:Name="BorderMove" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="1" Margin="0,5,5,0" CornerRadius="2.5" BorderBrush="#00383838" BorderThickness="1" Background="#BF747474" Visibility="Hidden">
+                    <Image x:Name="ImageMove" Source="Resources/move_cursor.png" Width="10" IsHitTestVisible="False"/>
+                </Border>
             </Grid>
         </Border>
-
     </Grid>
+    
 </UserControl>
