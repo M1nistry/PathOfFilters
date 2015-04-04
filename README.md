@@ -2,6 +2,6 @@
 Path Of Filters - Path of Exile Item Filter creator
 
 
-Credits
+Using
 
-[WPF SyntaxHighlightBox](https://syntaxhighlightbox.codeplex.com/)
+[AvalonEdit](http://www.codeproject.com/Articles/42490/Using-AvalonEdit-WPF-Text-Editor)
