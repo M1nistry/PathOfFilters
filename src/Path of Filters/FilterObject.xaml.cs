@@ -16,6 +16,16 @@ namespace PathOfFilters
         protected bool isDragging;
         private Point clickPosition;
 
+        public int Order
+        {
+            get
+            {
+                int id;
+                return int.TryParse(LabelId.Content.ToString(), out id) ? id : -1;
+            }
+            set { LabelId.Content = value; }
+        }
+
         public FilterObject()
         {
             InitializeComponent();
@@ -61,11 +71,6 @@ namespace PathOfFilters
             }
         }
 
-        private void FilterListView_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
         private void Grid_MouseEnter(object sender, MouseEventArgs e)
         {
             Show(true);
@@ -79,6 +84,7 @@ namespace PathOfFilters
         private void Show(bool fadeIn)
         {
             BorderMove.Visibility = Visibility.Visible;
+            BorderId.Visibility = Visibility.Visible;
             if (fadeIn)
             {
                 var a = new DoubleAnimation
@@ -93,8 +99,13 @@ namespace PathOfFilters
 
                 storyboard.Children.Add(a);
                 Storyboard.SetTarget(a, BorderMove);
+                Storyboard.SetTarget(a, BorderId);
                 Storyboard.SetTargetProperty(a, new PropertyPath(OpacityProperty));
-                storyboard.Completed += delegate { BorderMove.Visibility = Visibility.Visible; };
+                storyboard.Completed += delegate
+                {
+                    BorderMove.Visibility = Visibility.Visible;
+                    BorderId.Visibility = Visibility.Visible;
+                };
                 storyboard.Begin();
             }
             else
@@ -111,8 +122,13 @@ namespace PathOfFilters
 
                 storyboard.Children.Add(a);
                 Storyboard.SetTarget(a, BorderMove);
+                Storyboard.SetTarget(a, BorderId);
                 Storyboard.SetTargetProperty(a, new PropertyPath(OpacityProperty));
-                storyboard.Completed += delegate { BorderMove.Visibility = Visibility.Hidden; };
+                storyboard.Completed += delegate
+                {
+                    BorderId.Visibility = Visibility.Hidden;
+                    BorderMove.Visibility = Visibility.Hidden;
+                };
                 storyboard.Begin();
             }
         }

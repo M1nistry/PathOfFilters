@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Utils;
 
 namespace PathOfFilters
 {
@@ -44,24 +46,25 @@ namespace PathOfFilters
             _sql = new SqlWrapper();
             
             UpdateFilters();
-            TestFilter.FilterListView.Items.Add(new Filter {Name = "ItemLevel", Tag = ">70"});
-            TestFilter.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
-            TestFilter.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
-            TestFilter.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
-            TestFilter.FilterListView.Items.Add(new Filter { Name = "Class", Tag = "'One Hand Axe'" });
-            TestFilter.FilterListView.Items.Add(new Filter { Name = "BaseType", Tag = "'Siege Axe'" });
-            TestFilter.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
-            TestFilter.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
-            TestFilter.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "ItemLevel", Tag = ">70" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "Class", Tag = "'One Hand Axe'" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "BaseType", Tag = "'Siege Axe'" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
-            TestFilter2.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
+            
+            //TestFilter.FilterListView.Items.Add(new Filter {Name = "ItemLevel", Tag = ">70"});
+            //TestFilter.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
+            //TestFilter.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
+            //TestFilter.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
+            //TestFilter.FilterListView.Items.Add(new Filter { Name = "Class", Tag = "'One Hand Axe'" });
+            //TestFilter.FilterListView.Items.Add(new Filter { Name = "BaseType", Tag = "'Siege Axe'" });
+            //TestFilter.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
+            //TestFilter.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
+            //TestFilter.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "ItemLevel", Tag = ">70" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "Class", Tag = "'One Hand Axe'" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "BaseType", Tag = "'Siege Axe'" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
+            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
         }
 
         private void UpdateFilters()
@@ -187,6 +190,67 @@ namespace PathOfFilters
                 ScaleY = scaleY
             };
             FilterGrid.RenderTransform = scaletransform;
+        }
+
+        private void TestFilter_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine("Snapping");
+            SnapToGrid(TestFilter);
+            
+        }
+
+        private void SnapToGrid(UIElement element)
+        {
+            double xSnap = Canvas.GetLeft(element) % DragCanvas.RenderSize.Width;
+            double ySnap = Canvas.GetTop(element) % DragCanvas.RenderSize.Height;
+
+            // If it's less than half the grid size, snap left/up 
+            // (by subtracting the remainder), 
+            // otherwise move it the remaining distance of the grid size right/down
+            // (by adding the remaining distance to the next grid point).
+            if (xSnap <= DragCanvas.RenderSize.Width / 2.0)
+                xSnap *= -1;
+            else
+                xSnap = DragCanvas.RenderSize.Width - xSnap;
+            if (ySnap <= DragCanvas.RenderSize.Height / 2.0)
+                ySnap *= -1;
+            else
+                ySnap = DragCanvas.RenderSize.Height - ySnap;
+
+            xSnap += Canvas.GetLeft(element);
+            ySnap += Canvas.GetTop(element);
+
+            Canvas.SetLeft(element, xSnap);
+            Canvas.SetTop(element, ySnap);
+        }
+
+        private void LoadCreator()
+        {
+
+            for (var i = 1; i <= 2; i++)
+            {
+                var newFilterSection = new FilterObject { Order = i };
+                var newFilter = new Filter
+                {
+                    Name = "ItemLevel",
+                    FilterValue = ">15",
+                };
+                newFilterSection.FilterListView.Items.Add(newFilter);
+                DragCanvas.Children.Add(newFilterSection);
+            }
+        }
+
+        private void ButtonTester_Click(object sender, RoutedEventArgs e)
+        {
+            //var split = AvalonFilter.Text.Split(new [] {"\r\n\r\n"}, StringSplitOptions.None);
+            //Console.WriteLine(split);
+
+            //Regex r = new Regex("Show(.*?)", RegexOptions.Singleline);
+            var a = Regex.Matches(AvalonFilter.Text, @"^(Show|Hide)[\s\S]*?^\s*$", RegexOptions.Multiline|RegexOptions.Singleline);
+            foreach (Match m in a)
+            {
+                Console.WriteLine(m.Value);
+            }
         }
 
     }

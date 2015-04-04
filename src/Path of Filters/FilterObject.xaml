@@ -18,14 +18,16 @@
                             <GridViewColumn Header="Value" Width="75" DisplayMemberBinding="{Binding Tag}"/>
                         </GridView>
                     </ListView.View>
-                    <TextBlock Height="100" TextWrapping="Wrap" Text="TextBlock" Width="100"/>
 
                 </ListView>
+                <Border x:Name="BorderId" Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1" Margin="5,5,5,0" CornerRadius="2.5" BorderBrush="#59000000" BorderThickness="1" Background="White" Visibility="Hidden">
+                    <Label x:Name="LabelId" IsHitTestVisible="False" Content="11" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-1" Width="16" Height="16" Padding="0,1,0,0" HorizontalContentAlignment="Center" Foreground="Black"/>
+                </Border>
                 <Border x:Name="BorderMove" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="1" Margin="0,5,5,0" CornerRadius="2.5" BorderBrush="#00383838" BorderThickness="1" Background="#BF747474" Visibility="Hidden">
                     <Image x:Name="ImageMove" Source="Resources/move_cursor.png" Width="10" IsHitTestVisible="False"/>
                 </Border>
             </Grid>
         </Border>
     </Grid>
-    
+
 </UserControl>
