@@ -23,7 +23,7 @@
                 <Label x:Name="LabelTag" Content="Tag:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,87,0,0"/>
                 <TextBox x:Name="TextBoxTag" HorizontalAlignment="Left" Height="23" Margin="44,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="124"/>
                 <Button x:Name="ButtonAddFilter" Content="+" HorizontalAlignment="Left" Margin="147,14,0,0" VerticalAlignment="Top" Width="21" Click="ButtonAddFilter_Click"/>
-                <Button x:Name="ButtonTester" Content="Test!" HorizontalAlignment="Left" Margin="44,162,0,0" VerticalAlignment="Top" Width="75" Click="ButtonTester_Click"/>
+                <Button x:Name="ButtonTester" Content="Test!" HorizontalAlignment="Left" Margin="84,179,0,0" VerticalAlignment="Top" Width="75"/>
             </Grid>
         </Border>
 
@@ -31,24 +31,21 @@
             <MenuItem Header="Menu" Height="20">
                 <MenuItem Header="Exit" ToolTip="Closes the application"/>
             </MenuItem>
-            <MenuItem Header="Tools">
-                <MenuItem Header="New Filter" Click="NewFilter_MouseDown" />
+            <MenuItem x:Name="MenuTools" Header="Tools">
+                <MenuItem Header="Settings" Click="Settings_MouseDown" ToolTip="Opens the settings interface" />
             </MenuItem>
         </Menu>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,25,0,5" VerticalAlignment="Stretch" Width="3" Background="#26A0A0A0" Height="auto"/>
         <Label x:Name="LabelStatus" Content="Status:" Grid.Column="1" HorizontalAlignment="Left" Margin="332,0,0,0" VerticalAlignment="Top" Foreground="#BF000000"/>
-        <TabControl Margin="7,25,5,5" Grid.Column="1">
+        <TabControl x:Name="TabControlMain" Margin="7,25,5,5" Grid.Column="1" SelectionChanged="TabControlMain_SelectionChanged">
             <TabItem x:Name="TabEditor" Header="Filter">
                 <Grid Background="#FFE5E5E5">
                     <avalonedit:TextEditor x:Name="AvalonFilter" FontFamily="Tahoma" FontSize="10pt" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Creator">
+            <TabItem x:Name="TabCreator" Header="Creator">
                 <Grid x:Name="FilterGrid" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" MouseEnter="FilterGrid_MouseEnter" MouseWheel="FilterGrid_MouseWheel">
-                    <local:DragCanvas x:Name="DragCanvas">
-                        <local:FilterObject x:Name="TestFilter" HorizontalAlignment="Left" VerticalAlignment="Top" Height="125" Width="125" Canvas.Left="446" Canvas.Top="10" MouseUp="TestFilter_MouseUp"/>
-                        <local:FilterObject x:Name="TestFilter2" HorizontalAlignment="Left" VerticalAlignment="Top" Height="125" Width="125" Canvas.Left="446" Canvas.Top="135"/>
-                    </local:DragCanvas>
+                    <local:DragCanvas x:Name="DragCanvas" SizeChanged="DragCanvas_SizeChanged"/>
 
                 </Grid>
             </TabItem>

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Utils;
 
@@ -17,6 +20,7 @@ namespace PathOfFilters
         CompletionWindow _completionWindow;
         private readonly CompletionLists _completionList = new CompletionLists();
         private readonly SqlWrapper _sql;
+        private Settings _settings;
         private long _currentFilter;
 
         private double scaleX = 1, scaleY = 1;
@@ -46,8 +50,9 @@ namespace PathOfFilters
             _sql = new SqlWrapper();
             
             UpdateFilters();
-            
-            //TestFilter.FilterListView.Items.Add(new Filter {Name = "ItemLevel", Tag = ">70"});
+            //things();
+
+            //TestFilter.FilterListView.Items.Add(new FilterCondition { Name = "ItemLevel", Value = ">70" });
             //TestFilter.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
             //TestFilter.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
             //TestFilter.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
@@ -123,9 +128,18 @@ namespace PathOfFilters
             }
         }
 
-        private void NewFilter_MouseDown(object sender, RoutedEventArgs e)
+        private void Settings_MouseDown(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("sa");
+            if (_settings != null && _settings.IsVisible)
+            {
+                _settings.BringIntoView();
+            }
+            else
+            {
+                _settings = new Settings();
+                _settings.Closing += (o, ea) => _settings = null;
+                _settings.Show();
+            }
         }
 
         private void ButtonAddFilter_Click(object sender, RoutedEventArgs e)
@@ -144,6 +158,9 @@ namespace PathOfFilters
             TextBoxName.Text = selectedFilter.Name;
             TextBoxTag.Text = selectedFilter.Tag;
             AvalonFilter.Text = selectedFilter.FilterValue;
+            DragCanvas.Children.Clear();
+            PopulateCreator();
+            SnapToGrid();
         }
 
         private void ButtonApply_Click(object sender, RoutedEventArgs e)
@@ -192,65 +209,99 @@ namespace PathOfFilters
             FilterGrid.RenderTransform = scaletransform;
         }
 
-        private void TestFilter_MouseUp(object sender, MouseButtonEventArgs e)
+        private void SnapToGrid()
         {
-            Console.WriteLine("Snapping");
-            SnapToGrid(TestFilter);
-            
-        }
+            //TODO: Determine room for horizontal objects, based on width / 150
+            //TODO: Based on objects order int, position it respectively
 
-        private void SnapToGrid(UIElement element)
-        {
-            double xSnap = Canvas.GetLeft(element) % DragCanvas.RenderSize.Width;
-            double ySnap = Canvas.GetTop(element) % DragCanvas.RenderSize.Height;
-
-            // If it's less than half the grid size, snap left/up 
-            // (by subtracting the remainder), 
-            // otherwise move it the remaining distance of the grid size right/down
-            // (by adding the remaining distance to the next grid point).
-            if (xSnap <= DragCanvas.RenderSize.Width / 2.0)
-                xSnap *= -1;
-            else
-                xSnap = DragCanvas.RenderSize.Width - xSnap;
-            if (ySnap <= DragCanvas.RenderSize.Height / 2.0)
-                ySnap *= -1;
-            else
-                ySnap = DragCanvas.RenderSize.Height - ySnap;
-
-            xSnap += Canvas.GetLeft(element);
-            ySnap += Canvas.GetTop(element);
-
-            Canvas.SetLeft(element, xSnap);
-            Canvas.SetTop(element, ySnap);
-        }
-
-        private void LoadCreator()
-        {
-
-            for (var i = 1; i <= 2; i++)
+            double unitWidth = FilterGrid.ActualWidth/150;
+            int columnCount = 0, rowCount = 0;
+            var zIndex = DragCanvas.Children.Count;
+            for (var i = 1; i <= DragCanvas.Children.Count; i++)
             {
-                var newFilterSection = new FilterObject { Order = i };
-                var newFilter = new Filter
+                foreach (var filterObject in DragCanvas.Children)
                 {
-                    Name = "ItemLevel",
-                    FilterValue = ">15",
-                };
-                newFilterSection.FilterListView.Items.Add(newFilter);
-                DragCanvas.Children.Add(newFilterSection);
+                    if (((FilterObject) filterObject).Order != i) continue;
+                    if (columnCount == (int)unitWidth)
+                    {
+                        rowCount ++;
+                        columnCount = 0;
+                    }
+                    Canvas.SetLeft((UIElement)filterObject, (columnCount * 150) + 2);
+                    Canvas.SetTop((UIElement) filterObject, (rowCount*27) + 2);
+                    Canvas.SetZIndex((UIElement) filterObject, zIndex);
+                    zIndex--;
+                    columnCount++;
+                    break;
+                }
             }
         }
 
-        private void ButtonTester_Click(object sender, RoutedEventArgs e)
+        private void PopulateCreator()
         {
-            //var split = AvalonFilter.Text.Split(new [] {"\r\n\r\n"}, StringSplitOptions.None);
-            //Console.WriteLine(split);
+            const string strRegex = @"(|#(.+)$[\s\S]?)^(Show|Hide)[\s\S]*?^\s*$";
+            var r = new Regex(strRegex, RegexOptions.Multiline);
+            var order = 1;
 
-            //Regex r = new Regex("Show(.*?)", RegexOptions.Singleline);
-            var a = Regex.Matches(AvalonFilter.Text, @"^(Show|Hide)[\s\S]*?^\s*$", RegexOptions.Multiline|RegexOptions.Singleline);
-            foreach (Match m in a)
+            foreach (var match in r.Matches(AvalonFilter.Text).Cast<Match>().Where(match => match.Success))
             {
-                Console.WriteLine(m.Value);
+                var newFilterObject = new FilterObject { Order = order };
+                var splitMatch = match.Value.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                var conditionList = new List<FilterCondition>();
+                foreach (var line in splitMatch)
+                {
+                    if (line == string.Empty) continue;
+                    var conditionString = line.Trim();
+                    if (line.StartsWith("#"))
+                    {
+                        newFilterObject.Description = conditionString.Remove(0, 1);
+                        continue;
+                    }
+                    switch (conditionString)
+                    {
+                        case "Show":
+                            newFilterObject.Show = true;
+                            continue;
+                        case "Hide":
+                            newFilterObject.Show = false;
+                            continue;
+                    }
+                    if (!conditionString.Contains(" ")) continue;
+                    var condition = GetCondition(conditionString);
+                    if (condition.Name == String.Empty) continue;
+                    conditionList.Add(condition);
+                }
+                newFilterObject.Conditions = conditionList;
+                newFilterObject.DataContext = conditionList;
+                DragCanvas.Children.Add(newFilterObject);
+                order++;
+            } 
+        }
+
+        public FilterCondition GetCondition(string line)
+        {
+            var filterCondtion = new FilterCondition();
+            var conditionLine = line;
+            foreach (var x in FilterCondition.Conditions.Where(line.Contains))
+            {
+                filterCondtion.Name = x;
+                conditionLine = conditionLine.Replace(x + " ", "");
+                filterCondtion.Value = conditionLine;
             }
+            return filterCondtion;
+        }
+
+        private void TabControlMain_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((TabItem)TabControlMain.SelectedValue).Header.ToString() == "Creator")
+            {
+                SnapToGrid();
+            }
+        }
+
+        private void DragCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SnapToGrid();
         }
 
     }

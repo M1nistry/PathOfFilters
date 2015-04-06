@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Mono.CSharp.Linq;
 
 namespace PathOfFilters
 {
@@ -26,13 +30,34 @@ namespace PathOfFilters
             set { LabelId.Content = value; }
         }
 
+        public string Description
+        {
+            get { return LabelTitle.Content.ToString(); }
+            set { LabelTitle.Content = value; }
+        }
+
+        public List<FilterCondition> Conditions
+        {
+            get { return new List<FilterCondition>(); }
+            set
+            {
+                foreach (var condition in value)
+                {
+                    FilterListView.Items.Add(condition);
+                    HandleColor(condition);
+                }
+            }
+        }
+
+        public bool Show { get; set; }
+
         public FilterObject()
         {
             InitializeComponent();
             MouseLeftButtonDown += Control_MouseLeftButtonDown;
             MouseLeftButtonUp += Control_MouseLeftButtonUp;
             MouseMove += Control_MouseMove;
-
+            DataContext = this;
         }
 
         private void Control_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -71,17 +96,45 @@ namespace PathOfFilters
             }
         }
 
+        private void HandleColor(FilterCondition condition)
+        {
+            if (condition.Name != "SetBorderColor" && condition.Name != "SetTextColor" &&
+                condition.Name != "SetBackgroundColor") return;
+            var splitValue = condition.Value.Split(' ');
+            int r, g, b;
+            var color = new Color();
+            if (int.TryParse(splitValue[0], out r) && int.TryParse(splitValue[1], out g) &&
+                int.TryParse(splitValue[2], out b))
+            {
+                color = Color.FromRgb((byte) r, (byte) g, (byte) b);
+            }
+            switch (condition.Name)
+            {
+                case("SetBorderColor"):
+                    UserBorder.BorderBrush = new SolidColorBrush(color);
+                    break;
+                case("SetTextColor"):
+                    LabelTitle.Foreground = new SolidColorBrush(color);
+                    break;
+                case("SetBackgroundColor"):
+                    TitleBorder.Background = new SolidColorBrush(color);
+                    break;
+            }
+        }
+
         private void Grid_MouseEnter(object sender, MouseEventArgs e)
         {
-            Show(true);
+            ShowPopups(true);
         }
 
         private void Grid_MouseLeave(object sender, MouseEventArgs e)
         {
-            Show(false);
+            ShowPopups(false);
         }
 
-        private void Show(bool fadeIn)
+        /// <summary>Initiates the fade in of the move/order borders</summary>
+        /// <param name="fadeIn">True to fade in, False to fade out</param>
+        private void ShowPopups(bool fadeIn)
         {
             BorderMove.Visibility = Visibility.Visible;
             BorderId.Visibility = Visibility.Visible;
