@@ -10,16 +10,17 @@
                 <RadioButton x:Name="RadioPublic" Content="Public" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top" IsChecked="True" GroupName="PasteBinVisibility"/>
                 <RadioButton x:Name="RadioUnlisted" Content="Unlisted" HorizontalAlignment="Left" Margin="66,99,0,0" VerticalAlignment="Top" GroupName="PasteBinVisibility"/>
                 <RadioButton x:Name="RadioPrivate" Content="Private" HorizontalAlignment="Left" Margin="133,99,0,0" VerticalAlignment="Top" GroupName="PasteBinVisibility"/>
-                <TextBox x:Name="TextBoxUsername" HorizontalAlignment="Left" Height="18" Margin="76,18,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
-                <PasswordBox x:Name="PasswordPasteBin" HorizontalAlignment="Left" Margin="76,41,0,0" VerticalAlignment="Top" Width="150"/>
-                <Button x:Name="ButtonVerify" Content="Verify" HorizontalAlignment="Left" Margin="76,67,0,0" VerticalAlignment="Top" Width="75"/>
+                <TextBox x:Name="TextBoxUsername" HorizontalAlignment="Left" Height="23" Margin="76,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
+                <PasswordBox x:Name="PasswordPasteBin" HorizontalAlignment="Left" Margin="76,39,0,0" VerticalAlignment="Top" Width="150" Height="23"/>
+                <Button x:Name="ButtonVerify" Content="Verify" HorizontalAlignment="Left" Margin="76,67,0,0" VerticalAlignment="Top" Width="75" Click="ButtonVerify_Click"/>
+                <Label x:Name="LabelHelp" Content="?" HorizontalAlignment="Left" Margin="246,-18,-1,0" VerticalAlignment="Top" FontWeight="Medium" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" Height="25"/>
             </Grid>
         </GroupBox>
         <CheckBox x:Name="CheckBoxPasteBin" Content="" HorizontalAlignment="Left" Margin="67,52,0,0" VerticalAlignment="Top" IsChecked="True" Checked="CheckBoxPasteBin_Checked" Unchecked="CheckBoxPasteBin_Unchecked"/>
         <Label x:Name="LabelFilterPath" Content="Filter File:" HorizontalAlignment="Left" Margin="10,18,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBoxFilterFile" HorizontalAlignment="Left" Height="18" Margin="75,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="167"/>
-        <Button x:Name="ButtonFileBrowse" Content="..." HorizontalAlignment="Left" Height="17" Margin="247,23,0,0" VerticalAlignment="Top" Width="24" Click="ButtonFileBrowse_Click" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
-        <Button x:Name="ButtonSave" Content="Save" HorizontalAlignment="Left" Margin="207,239,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBox x:Name="TextBoxFilterFile" HorizontalAlignment="Left" Height="23" Margin="75,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="178"/>
+        <Button x:Name="ButtonFileBrowse" Content="..." HorizontalAlignment="Left" Height="23" Margin="258,21,0,0" VerticalAlignment="Top" Width="24" Click="ButtonFileBrowse_Click" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
+        <Button x:Name="ButtonSave" Content="Save" HorizontalAlignment="Left" Margin="207,239,0,0" VerticalAlignment="Top" Width="75" Click="ButtonSave_Click"/>
 
     </Grid>
 </Window>

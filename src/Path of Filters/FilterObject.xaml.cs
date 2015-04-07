@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using Mono.CSharp.Linq;
+using System.Windows.Threading;
 
 namespace PathOfFilters
 {
@@ -19,7 +18,8 @@ namespace PathOfFilters
 
         protected bool isDragging;
         private Point clickPosition;
-
+        private DispatcherTimer _animationTimer;
+        private bool _isExpaned;
         public int Order
         {
             get
@@ -32,7 +32,7 @@ namespace PathOfFilters
 
         public string Description
         {
-            get { return LabelTitle.Content.ToString(); }
+            get { return LabelTitle.Content != null ? LabelTitle.Content.ToString() : ""; }
             set { LabelTitle.Content = value; }
         }
 
@@ -124,17 +124,28 @@ namespace PathOfFilters
 
         private void Grid_MouseEnter(object sender, MouseEventArgs e)
         {
-            ShowPopups(true);
+            _animationTimer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0,0,0,0,300)
+            };
+            _animationTimer.Tick += delegate
+            {
+                Animation(true);
+                _isExpaned = true;
+                _animationTimer.Stop();
+            };
+            _animationTimer.Start();
         }
 
         private void Grid_MouseLeave(object sender, MouseEventArgs e)
         {
-            ShowPopups(false);
+            _animationTimer.Stop();
+            if (_isExpaned) Animation(false);
         }
 
         /// <summary>Initiates the fade in of the move/order borders</summary>
         /// <param name="fadeIn">True to fade in, False to fade out</param>
-        private void ShowPopups(bool fadeIn)
+        private void Animation(bool fadeIn)
         {
             BorderMove.Visibility = Visibility.Visible;
             BorderId.Visibility = Visibility.Visible;
@@ -142,47 +153,94 @@ namespace PathOfFilters
             {
                 var a = new DoubleAnimation
                 {
-                    From = 0.0,
-                    To = 1.0,
+                    From = 0,
+                    To = 100,
                     FillBehavior = FillBehavior.Stop,
-                    BeginTime = TimeSpan.FromSeconds(0),
-                    Duration = new Duration(TimeSpan.FromSeconds(0.2))
+                    BeginTime = TimeSpan.FromSeconds(0.1),
+                    Duration = new Duration(TimeSpan.FromSeconds(0.1))
+                };
+                var expand = new DoubleAnimation
+                {
+                    From = 25,
+                    To = 150,
+                    BeginTime = TimeSpan.FromSeconds(0.1),
+                    Duration = new Duration(TimeSpan.FromSeconds(0.1))
+                };
+                var title = new DoubleAnimation
+                {
+                    From = 23,
+                    To = 20,
+                    BeginTime = TimeSpan.FromSeconds(0.1),
+                    Duration = new Duration(TimeSpan.FromSeconds(0.1))
                 };
                 var storyboard = new Storyboard();
-
                 storyboard.Children.Add(a);
                 Storyboard.SetTarget(a, BorderMove);
                 Storyboard.SetTarget(a, BorderId);
                 Storyboard.SetTargetProperty(a, new PropertyPath(OpacityProperty));
+
+                storyboard.Children.Add(expand);
+                Storyboard.SetTarget(expand, FilterListView);
+                Storyboard.SetTargetProperty(expand, new PropertyPath(HeightProperty));
+
+                storyboard.Children.Add(title);
+                Storyboard.SetTarget(title, TitleBorder);
+                Storyboard.SetTargetProperty(title, new PropertyPath(HeightProperty));
+
                 storyboard.Completed += delegate
                 {
                     BorderMove.Visibility = Visibility.Visible;
                     BorderId.Visibility = Visibility.Visible;
                 };
-                storyboard.Begin();
+                storyboard.Begin(this, true);
             }
             else
             {
                 var a = new DoubleAnimation
                 {
-                    From = 1.0,
-                    To = 0.0,
+                    From = 100,
+                    To = 0,
                     FillBehavior = FillBehavior.Stop,
-                    BeginTime = TimeSpan.FromSeconds(0),
-                    Duration = new Duration(TimeSpan.FromSeconds(0.2))
+                    BeginTime = TimeSpan.FromSeconds(0.1),
+                    Duration = new Duration(TimeSpan.FromSeconds(0.1))
                 };
+                var collapse = new DoubleAnimation
+                {
+                    From = 150,
+                    To = 25,
+                    BeginTime = TimeSpan.FromSeconds(0.1),
+                    Duration = new Duration(TimeSpan.FromSeconds(0.1))
+                };
+                var title = new DoubleAnimation
+                {
+                    From = 20,
+                    To = 23,
+                    BeginTime = TimeSpan.FromSeconds(0.1),
+                    Duration = new Duration(TimeSpan.FromSeconds(0.1))
+                };
+
                 var storyboard = new Storyboard();
 
                 storyboard.Children.Add(a);
                 Storyboard.SetTarget(a, BorderMove);
                 Storyboard.SetTarget(a, BorderId);
                 Storyboard.SetTargetProperty(a, new PropertyPath(OpacityProperty));
+
+                storyboard.Children.Add(collapse);
+                Storyboard.SetTarget(collapse, FilterListView);
+                Storyboard.SetTargetProperty(collapse, new PropertyPath(HeightProperty));
+
+                storyboard.Children.Add(title);
+                Storyboard.SetTarget(title, TitleBorder);
+                Storyboard.SetTargetProperty(title, new PropertyPath(HeightProperty));
+
                 storyboard.Completed += delegate
                 {
                     BorderId.Visibility = Visibility.Hidden;
                     BorderMove.Visibility = Visibility.Hidden;
                 };
-                storyboard.Begin();
+                storyboard.Begin(this, true);
+                _isExpaned = false;
             }
         }
     }

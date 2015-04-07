@@ -9,15 +9,20 @@ namespace PathOfFilters
     internal class SqlWrapper
     {
         private readonly string _constring;
+        private readonly SQLiteConnection _connection;
         private readonly string _dbPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\PathOfFilters\Filters.s3db";
 
         internal SqlWrapper()
         {
-            var connection = new SQLiteConnectionStringBuilder
+            var constring = new SQLiteConnectionStringBuilder()
             {
                 ConnectionString = String.Format("Data source={0};Version=3;", _dbPath)
             };
-            _constring = connection.ConnectionString;
+            _connection = new SQLiteConnection
+            {
+                ConnectionString = constring.ToString(),
+                ParseViaFramework = true
+            };
             Setup();
         }
 
@@ -28,7 +33,7 @@ namespace PathOfFilters
                 Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\PathOfFilters");
                 if (!File.Exists(_dbPath)) SQLiteConnection.CreateFile(_dbPath);
             }
-            using (var connection = new SQLiteConnection(_constring).OpenAndReturn())
+            using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
             {
                 using (var cmd = new SQLiteCommand(connection))
                 {
@@ -40,38 +45,47 @@ namespace PathOfFilters
             }
         }
 
-        internal long CreateFilter()
+        /// <summary> Creates a new default Filter and returns the object with it's ID </summary>
+        /// <returns></returns>
+        internal Filter CreateFilter()
         {
             try
             {
-                using (var connection = new SQLiteConnection(_constring).OpenAndReturn())
+                using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
                 {
                     const string insertFilter = @"INSERT INTO `filters` (name, tag, filter) VALUES ('New Filter', '', '');";
                     using (var cmd = new SQLiteCommand(insertFilter, connection))
                     {
                         cmd.ExecuteNonQuery();
-                        return connection.LastInsertRowId;
+                        var newFilter = new Filter
+                        {
+                            Id = (int)connection.LastInsertRowId,
+                            Name = "New Filter",
+                            FilterValue = String.Format("#Generated using PathOfFilters on {0} | Developed by Ministry v{1}", DateTime.Now.ToShortDateString(), Environment.Version),
+                            Tag = "",
+                        };
+                        return newFilter;
                     }
                 }
             }
             catch (SQLiteException ex)
             {
                 if (ex.ErrorCode == 19)MessageBox.Show(@"Failed to create new filter, verify that a filter doesn't already exist with the name 'New Filter'");
-                return 0;
+                return new Filter();
             }
         }
 
-        internal bool UpdateFilter(long id, string name, string tag, string filter)
+        internal bool UpdateFilter(Filter filter)
         {
-            using (var connection = new SQLiteConnection(_constring).OpenAndReturn())
+            using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
             {
                 const string updateFilter = @"UPDATE `filters` SET name=@name, tag=@tag, filter=@filter WHERE id=@id";
                 using (var cmd = new SQLiteCommand(updateFilter, connection))
                 {
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@tag", tag);
-                    cmd.Parameters.AddWithValue("@filter", filter);
-                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@name", filter.Name);
+                    cmd.Parameters.AddWithValue("@tag", filter.Tag);
+                    cmd.Parameters.AddWithValue("@filter", filter.FilterValue);
+                    cmd.Parameters.AddWithValue("@id", filter.Id);
                     cmd.ExecuteNonQuery();
                     return true;
                 }
@@ -81,7 +95,7 @@ namespace PathOfFilters
         internal List<Filter> GetFilters()
         {
             var filterList = new List<Filter>();
-            using (var connection = new SQLiteConnection(_constring).OpenAndReturn())
+            using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
             {
                 const string selectFilters = @"SELECT * FROM `filters`;";
                 using (var cmd = new SQLiteCommand(selectFilters, connection))

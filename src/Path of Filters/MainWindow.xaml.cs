@@ -6,9 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Utils;
 
 namespace PathOfFilters
 {
@@ -21,14 +19,17 @@ namespace PathOfFilters
         private readonly CompletionLists _completionList = new CompletionLists();
         private readonly SqlWrapper _sql;
         private Settings _settings;
-        private long _currentFilter;
+        private Filter _currentFilter;
+        public Pastebin Pastebin;
+        private static MainWindow _main;
 
         private double scaleX = 1, scaleY = 1;
 
         public MainWindow()
         {
             InitializeComponent();
-
+            _main = this;
+            Pastebin = new Pastebin();
 
             //Initializes the custom syntax highlighting within poefilter.xshd
             using (var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("PathOfFilters.Resources.poefilter.xshd"))
@@ -50,26 +51,11 @@ namespace PathOfFilters
             _sql = new SqlWrapper();
             
             UpdateFilters();
-            //things();
+        }
 
-            //TestFilter.FilterListView.Items.Add(new FilterCondition { Name = "ItemLevel", Value = ">70" });
-            //TestFilter.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
-            //TestFilter.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
-            //TestFilter.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
-            //TestFilter.FilterListView.Items.Add(new Filter { Name = "Class", Tag = "'One Hand Axe'" });
-            //TestFilter.FilterListView.Items.Add(new Filter { Name = "BaseType", Tag = "'Siege Axe'" });
-            //TestFilter.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
-            //TestFilter.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
-            //TestFilter.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "ItemLevel", Tag = ">70" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "DropLevel", Tag = "55" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "Quality", Tag = ">= 10" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "Rarity", Tag = "Unique" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "Class", Tag = "'One Hand Axe'" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "BaseType", Tag = "'Siege Axe'" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "Sockets", Tag = ">= 0" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "LinkedSockets", Tag = ">= 0" });
-            //TestFilter2.FilterListView.Items.Add(new Filter { Name = "SocketGroup", Tag = "6" });
+        public static MainWindow GetSingleton()
+        {
+            return _main;
         }
 
         private void UpdateFilters()
@@ -145,8 +131,12 @@ namespace PathOfFilters
         private void ButtonAddFilter_Click(object sender, RoutedEventArgs e)
         {
             _currentFilter = _sql.CreateFilter();
-            if (_currentFilter <= 0) return;
-            TextBoxName.Text = "New Filter";
+            if (_currentFilter.Id == 0) return;
+            TextBoxName.Text = _currentFilter.Name;
+            TextBoxTag.Text = _currentFilter.Tag;
+            AvalonFilter.Text = _currentFilter.FilterValue;
+            UpdateFilters();
+            ComboBoxFilters.SelectedValue = _currentFilter.Id;
 
         }
 
@@ -167,7 +157,14 @@ namespace PathOfFilters
         {
             var selectedFilter = ((Filter) ComboBoxFilters.SelectedItem);
             if (selectedFilter == null) return;
-            if (_sql.UpdateFilter(selectedFilter.Id, TextBoxName.Text, TextBoxTag.Text, AvalonFilter.Text))
+            var currentFilter = new Filter
+            {
+                Id = selectedFilter.Id,
+                Name = TextBoxName.Text,
+                Tag = TextBoxTag.Text,
+                FilterValue = AvalonFilter.Text
+            };
+            if (_sql.UpdateFilter(currentFilter))
             {
                 LabelStatus.Content = String.Format("Status: Successfully updated filter {0}", TextBoxName.Text);
             }
@@ -211,17 +208,14 @@ namespace PathOfFilters
 
         private void SnapToGrid()
         {
-            //TODO: Determine room for horizontal objects, based on width / 150
-            //TODO: Based on objects order int, position it respectively
-
-            double unitWidth = FilterGrid.ActualWidth/150;
+            var unitWidth = FilterGrid.ActualWidth/150;
             int columnCount = 0, rowCount = 0;
             var zIndex = DragCanvas.Children.Count;
             for (var i = 1; i <= DragCanvas.Children.Count; i++)
             {
-                foreach (var filterObject in DragCanvas.Children)
+                var i1 = i;
+                foreach (var filterObject in DragCanvas.Children.Cast<object>().Where(filterObject => ((FilterObject) filterObject).Order == i1))
                 {
-                    if (((FilterObject) filterObject).Order != i) continue;
                     if (columnCount == (int)unitWidth)
                     {
                         rowCount ++;
@@ -273,6 +267,7 @@ namespace PathOfFilters
                 }
                 newFilterObject.Conditions = conditionList;
                 newFilterObject.DataContext = conditionList;
+                newFilterObject.Name = "Filter" + newFilterObject.Order;
                 DragCanvas.Children.Add(newFilterObject);
                 order++;
             } 
@@ -304,5 +299,8 @@ namespace PathOfFilters
             SnapToGrid();
         }
 
+        #region SuperSecret
+        public const string CRYPT_KEY = @"7793F5001D54BCFF0B4BAA7945F3F3F8";
+        #endregion
     }
 }

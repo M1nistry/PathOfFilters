@@ -8,9 +8,14 @@ namespace PathOfFilters
     /// </summary>
     public partial class Settings : Window
     {
+        private MainWindow _main;
         public Settings()
         {
             InitializeComponent();
+            _main = MainWindow.GetSingleton();
+            TextBoxUsername.Text = Properties.Settings.Default.PastebinUsername;
+            PasswordPasteBin.Password = Properties.Settings.Default.PastebinPassword != string.Empty
+                ? Crypto.DecryptStringAES(Properties.Settings.Default.PastebinPassword, MainWindow.CRYPT_KEY) : "";
         }
 
         private void CheckBoxPasteBin_Checked(object sender, RoutedEventArgs e)
@@ -34,6 +39,22 @@ namespace PathOfFilters
             var result = fileBrowser.ShowDialog();
             if (result != true) return;
             TextBoxFilterFile.Text = fileBrowser.FileName;
+        }
+
+        private void ButtonVerify_Click(object sender, RoutedEventArgs e)
+        {
+            var pastebin = _main.Pastebin;
+            pastebin.Username = TextBoxUsername.Text;
+            pastebin.Password = PasswordPasteBin.Password;
+            var user = _main.Pastebin.PastebinUser;
+            if (user == null) return;
+            Properties.Settings.Default.PastebinUsername = pastebin.Username;
+            Properties.Settings.Default.PastebinPassword = Crypto.EncryptStringAES(pastebin.Password, MainWindow.CRYPT_KEY);
+        }
+
+        private void ButtonSave_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.Save();
         }
     }
 }

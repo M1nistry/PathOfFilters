@@ -76,14 +76,5 @@
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
 
-        <DataTemplate x:Key="ConditionValue">
-            <DockPanel>
-                <TextBlock Foreground="Fuchsia" HorizontalAlignment="Center">
-                    <TextBlock.Text>
-                        <Binding Path="Value"/>
-                    </TextBlock.Text>
-                </TextBlock>
-            </DockPanel>
-        </DataTemplate>
     </Application.Resources>
 </Application>
