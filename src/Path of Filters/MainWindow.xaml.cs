@@ -30,7 +30,7 @@ namespace PathOfFilters
             InitializeComponent();
             _main = this;
             Pastebin = new Pastebin();
-
+            FilterTitleDescription("");
             //Initializes the custom syntax highlighting within poefilter.xshd
             using (var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("PathOfFilters.Resources.poefilter.xshd"))
             {
@@ -214,16 +214,17 @@ namespace PathOfFilters
             for (var i = 1; i <= DragCanvas.Children.Count; i++)
             {
                 var i1 = i;
-                foreach (var filterObject in DragCanvas.Children.Cast<object>().Where(filterObject => ((FilterObject) filterObject).Order == i1))
+                foreach (FilterObject filterObject in DragCanvas.Children.Cast<object>().Where(filterObject => ((FilterObject) filterObject).Order == i1))
                 {
                     if (columnCount == (int)unitWidth)
                     {
                         rowCount ++;
                         columnCount = 0;
                     }
-                    Canvas.SetLeft((UIElement)filterObject, (columnCount * 150) + 2);
-                    Canvas.SetTop((UIElement) filterObject, (rowCount*27) + 2);
-                    Canvas.SetZIndex((UIElement) filterObject, zIndex);
+
+                    Canvas.SetLeft(filterObject, (columnCount * 150) + (columnCount * 2));
+                    Canvas.SetTop(filterObject, (rowCount * 27) + (rowCount * 2));
+                    Canvas.SetZIndex(filterObject, zIndex);
                     zIndex--;
                     columnCount++;
                     break;
@@ -248,7 +249,10 @@ namespace PathOfFilters
                     var conditionString = line.Trim();
                     if (line.StartsWith("#"))
                     {
-                        newFilterObject.Description = conditionString.Remove(0, 1);
+                        var plainLine = conditionString.Remove(0, 1);
+                        var titleDescription = FilterTitleDescription(plainLine);
+                        newFilterObject.Title = titleDescription.ContainsKey("title") ? titleDescription["title"] : plainLine;
+                        newFilterObject.Description = titleDescription.ContainsKey("description") ? titleDescription["description"] : plainLine;
                         continue;
                     }
                     switch (conditionString)
@@ -286,12 +290,23 @@ namespace PathOfFilters
             return filterCondtion;
         }
 
+        private static Dictionary<string,string> FilterTitleDescription(string commentLine)
+        {
+            var objDic = commentLine.Split(';')
+                    .Select(p => p.Split('='))
+                    .ToDictionary(p => p[0], p => p.Length > 1 ? p[1] : null);
+            return objDic;
+        }
+
         private void TabControlMain_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (((TabItem)TabControlMain.SelectedValue).Header.ToString() == "Creator")
+            if (((TabItem) TabControlMain.SelectedValue).Header.ToString() == "Creator")
             {
+                SliderZoom.Visibility = Visibility.Visible;
                 SnapToGrid();
+                return;
             }
+            SliderZoom.Visibility = Visibility.Hidden;
         }
 
         private void DragCanvas_SizeChanged(object sender, SizeChangedEventArgs e)

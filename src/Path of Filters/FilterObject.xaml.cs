@@ -30,11 +30,13 @@ namespace PathOfFilters
             set { LabelId.Content = value; }
         }
 
-        public string Description
+        public string Title
         {
             get { return LabelTitle.Content != null ? LabelTitle.Content.ToString() : ""; }
             set { LabelTitle.Content = value; }
         }
+
+        public string Description { get; set; }
 
         public List<FilterCondition> Conditions
         {
@@ -168,7 +170,7 @@ namespace PathOfFilters
                 };
                 var title = new DoubleAnimation
                 {
-                    From = 23,
+                    From = 25,
                     To = 20,
                     BeginTime = TimeSpan.FromSeconds(0.1),
                     Duration = new Duration(TimeSpan.FromSeconds(0.1))
@@ -214,7 +216,7 @@ namespace PathOfFilters
                 var title = new DoubleAnimation
                 {
                     From = 20,
-                    To = 23,
+                    To = 25,
                     BeginTime = TimeSpan.FromSeconds(0.1),
                     Duration = new Duration(TimeSpan.FromSeconds(0.1))
                 };
