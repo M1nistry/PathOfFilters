@@ -38,7 +38,7 @@ namespace PathOfFilters
                 using (var cmd = new SQLiteCommand(connection))
                 {
                     const string createFilters = @"CREATE TABLE IF NOT EXISTS `filters` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT UNIQUE, 
-                                `tag` TEXT, `filter` TEXT);";
+                                `tag` TEXT, `filter` TEXT, `version` INTEGER, `pastebin` TEXT);";
                     cmd.CommandText = createFilters;
                     cmd.ExecuteNonQuery();
                 }
@@ -53,7 +53,7 @@ namespace PathOfFilters
             {
                 using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
                 {
-                    const string insertFilter = @"INSERT INTO `filters` (name, tag, filter) VALUES ('New Filter', '', '');";
+                    const string insertFilter = @"INSERT INTO `filters` (name, tag, filter, version, pastebin) VALUES ('New Filter', '', '', 1, '');";
                     using (var cmd = new SQLiteCommand(insertFilter, connection))
                     {
                         cmd.ExecuteNonQuery();
@@ -79,12 +79,14 @@ namespace PathOfFilters
         {
             using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
             {
-                const string updateFilter = @"UPDATE `filters` SET name=@name, tag=@tag, filter=@filter WHERE id=@id";
+                const string updateFilter = @"UPDATE `filters` SET name=@name, tag=@tag, filter=@filter, version=@version, pastebin=@pastebin WHERE id=@id";
                 using (var cmd = new SQLiteCommand(updateFilter, connection))
                 {
                     cmd.Parameters.AddWithValue("@name", filter.Name);
                     cmd.Parameters.AddWithValue("@tag", filter.Tag);
                     cmd.Parameters.AddWithValue("@filter", filter.FilterValue);
+                    cmd.Parameters.AddWithValue("@version", filter.Version);
+                    cmd.Parameters.AddWithValue("@pastebin", filter.Pastebin);
                     cmd.Parameters.AddWithValue("@id", filter.Id);
                     cmd.ExecuteNonQuery();
                     return true;

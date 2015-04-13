@@ -12,3 +12,49 @@ c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of 
 c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\Path of Filters.pdb
 C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters.exe
 C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters.pdb
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Resources\armour-data.txt
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Resources\weapon-data.txt
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Path of Filters.exe.config
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Path of Filters.exe
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Path of Filters.pdb
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.AvalonEdit.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.NRefactory.Cecil.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.NRefactory.CSharp.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.NRefactory.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.NRefactory.Xml.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Mono.Cecil.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Mono.Cecil.Mdb.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Mono.Cecil.Pdb.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Mono.Cecil.Rocks.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\Pastebin.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\System.Data.SQLite.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.AvalonEdit.xml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.NRefactory.xml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.NRefactory.Cecil.xml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.NRefactory.CSharp.xml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\ICSharpCode.NRefactory.Xml.xml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\System.Data.SQLite.xml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters.csprojResolveAssemblyReference.cache
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Settings.baml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\App.baml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\FilterObject.g.cs
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\MainWindow.g.cs
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Settings.g.cs
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\App.g.cs
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters_Content.g.cs
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters_MarkupCompile.cache
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters_MarkupCompile.lref
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\FilterObject.baml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\MainWindow.baml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters.g.resources
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\PathOfFilters.Properties.Resources.resources
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Path of Filters.csproj.GenerateResource.Cache
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\AddFilter.baml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\AddFilter.g.cs
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Autocomplete.baml
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\Autocomplete.g.cs

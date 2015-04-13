@@ -102,6 +102,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddFilter.xaml.cs">
+      <DependentUpon>AddFilter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Autocomplete.xaml.cs">
+      <DependentUpon>Autocomplete.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Crypto.cs" />
     <Compile Include="DragCanvas.cs" />
     <Compile Include="Filter.cs" />
@@ -115,6 +121,14 @@
     </Compile>
     <Compile Include="SqlWrapper.cs" />
     <Compile Include="ThumbConector.cs" />
+    <Page Include="AddFilter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Autocomplete.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="FilterObject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

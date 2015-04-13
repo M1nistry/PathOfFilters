@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -22,6 +23,7 @@ namespace PathOfFilters
         private Filter _currentFilter;
         public Pastebin Pastebin;
         private static MainWindow _main;
+        internal FilterObject selectedFilter;
 
         private double scaleX = 1, scaleY = 1;
 
@@ -49,7 +51,6 @@ namespace PathOfFilters
             }
 
             _sql = new SqlWrapper();
-            
             UpdateFilters();
         }
 
@@ -157,16 +158,19 @@ namespace PathOfFilters
         {
             var selectedFilter = ((Filter) ComboBoxFilters.SelectedItem);
             if (selectedFilter == null) return;
+            int version;
             var currentFilter = new Filter
             {
                 Id = selectedFilter.Id,
                 Name = TextBoxName.Text,
                 Tag = TextBoxTag.Text,
-                FilterValue = AvalonFilter.Text
+                FilterValue = AvalonFilter.Text,
+                Version = int.TryParse(TextBoxNumber.Text, out version) ? version : 0,
+                Pastebin = TextboxPastebin.Text
             };
             if (_sql.UpdateFilter(currentFilter))
             {
-                LabelStatus.Content = String.Format("Status: Successfully updated filter {0}", TextBoxName.Text);
+                TextStatus.Text = String.Format("Status: Successfully updated filter {0}", TextBoxName.Text);
             }
             UpdateFilters();
             ComboBoxFilters.SelectedValue = selectedFilter.Id;
@@ -179,46 +183,23 @@ namespace PathOfFilters
 
         private void FilterGrid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (scaleX > 2 || scaleY > 2)
-            {
-                scaleX = 1;
-                scaleY = 1;
-            }
-
-            if (e.Delta > 0)
-            {
-                if (scaleX > 1.8 || scaleY > 1.8) return;
-                scaleX = scaleX + 0.1;
-                scaleY = scaleY + 0.1;
-            }
-            else
-            {
-                if (scaleX <= 0.6 || scaleY <= 0.6) return;
-                scaleX = scaleX - 0.1;
-                scaleY = scaleY - 0.1;
-            }
-            Console.WriteLine("ScaleX " + scaleX + " ScaleY " + scaleY);
-            var scaletransform = new ScaleTransform
-            {
-                ScaleX = scaleX,
-                ScaleY = scaleY
-            };
-            FilterGrid.RenderTransform = scaletransform;
+            if (e.Delta > 0) SliderZoom.Value = SliderZoom.Value + 0.1;
+            else SliderZoom.Value = SliderZoom.Value - 0.1;
         }
 
-        private void SnapToGrid()
+        internal void SnapToGrid()
         {
-            var unitWidth = FilterGrid.ActualWidth/150;
+            var unitWidth = FilterGrid.ActualWidth / 150;
             int columnCount = 0, rowCount = 0;
             var zIndex = DragCanvas.Children.Count;
             for (var i = 1; i <= DragCanvas.Children.Count; i++)
             {
                 var i1 = i;
-                foreach (FilterObject filterObject in DragCanvas.Children.Cast<object>().Where(filterObject => ((FilterObject) filterObject).Order == i1))
+                foreach (FilterObject filterObject in DragCanvas.Children.Cast<object>().Where(filterObject => ((FilterObject)filterObject).Order == i1))
                 {
                     if (columnCount == (int)unitWidth)
                     {
-                        rowCount ++;
+                        rowCount++;
                         columnCount = 0;
                     }
 
@@ -237,6 +218,7 @@ namespace PathOfFilters
             const string strRegex = @"(|#(.+)$[\s\S]?)^(Show|Hide)[\s\S]*?^\s*$";
             var r = new Regex(strRegex, RegexOptions.Multiline);
             var order = 1;
+            var id = 1;
 
             foreach (var match in r.Matches(AvalonFilter.Text).Cast<Match>().Where(match => match.Success))
             {
@@ -272,7 +254,9 @@ namespace PathOfFilters
                 newFilterObject.Conditions = conditionList;
                 newFilterObject.DataContext = conditionList;
                 newFilterObject.Name = "Filter" + newFilterObject.Order;
+                newFilterObject.Id = id;
                 DragCanvas.Children.Add(newFilterObject);
+                id++;
                 order++;
             } 
         }
@@ -314,8 +298,226 @@ namespace PathOfFilters
             SnapToGrid();
         }
 
+        private int _numValue = 0;
+        public int NumValue
+        {
+            get {  return _numValue; }
+            set
+            {
+                _numValue = value;
+                TextBoxNumber.Text = value.ToString();
+            }
+        }
+
+        private void cmdUp_Click(object sender, RoutedEventArgs e)
+        {
+            NumValue++;
+        }
+
+        private void cmdDown_Click(object sender, RoutedEventArgs e)
+        {
+            NumValue--;
+        }
+
+        private void txtNum_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TextBoxNumber == null)
+            {
+                return;
+            }
+
+            if (!int.TryParse(TextBoxNumber.Text, out _numValue))
+                TextBoxNumber.Text = _numValue.ToString();
+        }
+
         #region SuperSecret
         public const string CRYPT_KEY = @"7793F5001D54BCFF0B4BAA7945F3F3F8";
         #endregion
+
+        private void SliderZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var scaletransform = new ScaleTransform
+            {
+                ScaleX = SliderZoom.Value,
+                ScaleY = SliderZoom.Value
+            };
+            DragCanvas.RenderTransform = scaletransform;
+        }
+
+        private void DragCanvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+           
+        }
+
+        internal void PopulateFilter(FilterObject filterObject)
+        {
+            StackPanelConditions.Children.Clear();
+            var dynamicGrid = new Grid
+            {
+                Margin = new Thickness(0,1,0,0),
+                Height = 22,
+                ColumnDefinitions = { 
+                    new ColumnDefinition
+                {
+                    Name = "ComboBoxColumn", Width = new GridLength(150)
+                }, new ColumnDefinition
+                {
+                    Name = "ConditionValueColumn",
+                    Width = new GridLength(180)
+                }, new ColumnDefinition
+                {
+                    Name = "RemoveColumn",
+                    Width = new GridLength(20)
+                }}
+            };
+
+            var comboBox = new ComboBox
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Width = 150,
+                ItemsSource = filterObject.ObservableClass
+            };
+
+            var textBox = new TextBox
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Height = 22,
+                Width = 175,
+                Margin = new Thickness(1,0,0,0)
+            };
+
+            var removeButton = new Button
+            {
+                Content = "-",
+                Width = 20,
+                Height = 20,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            Grid.SetColumn(comboBox, 0);
+            Grid.SetColumn(textBox, 1);
+            Grid.SetColumn(removeButton, 2);
+
+            foreach (var condition in filterObject.Conditions)
+            {
+                textBox.Text = condition.Value;
+                comboBox.Text = condition.Name;
+                dynamicGrid.Children.Add(comboBox);
+                dynamicGrid.Children.Add(textBox);
+                dynamicGrid.Children.Add(removeButton);
+                StackPanelConditions.Children.Add(dynamicGrid);
+            }
+            AddBlankRow();
+        }
+
+        private void AddBlankRow()
+        {
+            var dynamicGrid = new Grid
+            {
+                Margin = new Thickness(0, 1, 0, 0),
+                Height = 22,
+                ColumnDefinitions = { 
+                    new ColumnDefinition
+                {
+                    Name = "ComboBoxColumn", Width = new GridLength(150)
+                }, new ColumnDefinition
+                {
+                    Name = "ConditionValueColumn",
+                    Width = new GridLength(180)
+                }, new ColumnDefinition
+                {
+                    Name = "RemoveColumn",
+                    Width = new GridLength(20)
+                }}
+            };
+
+            var comboBox = new ComboBox
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Width = 150,
+                ItemsSource = _completionList.ObservableClass
+            };
+            comboBox.DropDownOpened += comboBox_DropDownOpened;
+
+            var textBox = new TextBox
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Height = 22,
+                Width = 175,
+                Margin = new Thickness(1, 0, 0, 0)
+            };
+
+            textBox.TextChanged += TextBoxTextChanged;
+
+            var removeButton = new Button
+            {
+                Content = "-",
+                Width = 20,
+                Height = 20,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            removeButton.Click += RemoveButtonOnClick;
+
+            Grid.SetColumn(comboBox, 0);
+            Grid.SetColumn(textBox, 1);
+            Grid.SetColumn(removeButton, 2);
+            dynamicGrid.Children.Add(comboBox);
+            dynamicGrid.Children.Add(textBox);
+            dynamicGrid.Children.Add(removeButton);
+            StackPanelConditions.Children.Insert(StackPanelConditions.Children.Count, dynamicGrid);
+
+        }
+
+        private void TextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var grid = (Grid)StackPanelConditions.Children[StackPanelConditions.Children.Count - 1];
+            var textBox = ((TextBox)grid.Children[1]).Text;
+            if (textBox != string.Empty) AddBlankRow();
+        }
+
+        private void RemoveButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            StackPanelConditions.Children.RemoveAt(StackPanelConditions.Children.IndexOf((UIElement)((Button)sender).Parent));
+        }
+
+        private void comboBox_DropDownOpened(object sender, EventArgs e)
+        {
+            var grid = (Grid)StackPanelConditions.Children[StackPanelConditions.Children.Count -1];
+            var textBox = ((TextBox) grid.Children[1]).Text;
+            if (textBox != string.Empty)AddBlankRow();
+        }
+
+        private void TextBoxTitle_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
+        }
+
+        private void ButtonUpdateFilterObject_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedFilter == null) return;
+            selectedFilter.Title = TextBoxTitle.Text;
+            selectedFilter.Description = TextBoxDescription.Text;
+            selectedFilter.Show = RadioShow.IsChecked == true;
+            selectedFilter.Id = selectedFilter.Id;
+            selectedFilter.Order = selectedFilter.Order;
+            var conditionList = new List<FilterCondition>();
+            foreach (Grid grid in StackPanelConditions.Children)
+            {
+                var newCondition = new FilterCondition
+                {
+                    Name = ((ComboBox)grid.Children[0]).Text,
+                    Value = ((TextBox)grid.Children[1]).Text
+                };
+                if (newCondition.Name != string.Empty && newCondition.Value != string.Empty) conditionList.Add(newCondition);
+            }
+            selectedFilter.Conditions.Clear();
+            selectedFilter.Conditions = conditionList;
+        }
+
     }
 }

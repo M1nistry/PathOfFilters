@@ -6,15 +6,19 @@
     xmlns:emit="clr-namespace:System.Reflection.Emit;assembly=mscorlib"
     mc:Ignorable="d" x:Name="Main"
         x:Class="PathOfFilters.MainWindow"
-        Title="Path of Filters | 0.1a" Height="477" Width="798" >
-    <Grid x:Name="GridMain" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
+        Title="Path of Filters | 0.1a" Height="579" Width="1064">
+    <Grid x:Name="GridMain" Background="#FFF0F0F0" Margin="0,0,0,16">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="AttributeColumn" ToolTip="Filter" Width="191" MinWidth="185" MaxWidth="300"/>
             <ColumnDefinition x:Name="FilterColumn" Width="599*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" x:Name="ControlsBorder" BorderBrush="#FF787878" Opacity="0.75" BorderThickness="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="auto" Margin="8,25,3,5" Padding="0" Width="auto">
+        <StatusBar Grid.ColumnSpan="2" Margin="0,0,0,-16" VerticalAlignment="Bottom" Background="#FFF0F0F0" Height="17" Grid.Row="1">
+            <TextBlock x:Name="TextStatus"  Width="auto" Text="Status:" VerticalAlignment="Top" Margin="5,-5,0,0" Height="20"/>
+        </StatusBar>
+
+        <Border Grid.Column="0" x:Name="ControlsBorder" BorderBrush="#FF787878" Opacity="0.75" BorderThickness="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="auto" Margin="8,25,3,5" Padding="0" Width="auto" Grid.RowSpan="2">
             <Grid Height="auto" VerticalAlignment="Stretch" Margin="1,-1,-1,3">
                 <Label x:Name="LabelFilter" Content="Filter:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,11,0,0"/>
                 <ComboBox x:Name="ComboBoxFilters" HorizontalAlignment="Left" Margin="44,13,0,0" VerticalAlignment="Top" Width="98" ItemsSource="{Binding Filters}" DisplayMemberPath="Filter" SelectionChanged="ComboBoxFilters_SelectionChanged"/>
@@ -25,6 +29,15 @@
                 <Label x:Name="LabelTag" Content="Tag:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,87,0,0"/>
                 <TextBox x:Name="TextBoxTag" HorizontalAlignment="Left" Height="23" Margin="44,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="124"/>
                 <Button x:Name="ButtonAddFilter" Content="+" HorizontalAlignment="Left" Margin="147,14,0,0" VerticalAlignment="Top" Width="21" Click="ButtonAddFilter_Click"/>
+                <Label x:Name="LabelVersion" Content="Version:" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="TextBoxNumber" Margin="94,121,0,0" Width="50" Text="0" TextChanged="txtNum_TextChanged" Height="23" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <Label x:Name="LabelPastebin" Content="Pastebin:" HorizontalAlignment="Left" Margin="10,146,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="TextboxPastebin" HorizontalAlignment="Left" Height="23" Margin="94,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="74"/>
+                <StackPanel HorizontalAlignment="Right" Height="23" Margin="0,121,8,0" VerticalAlignment="Top" Width="23">
+                    <Button x:Name="ButtonUp"  Margin="0,0,3,0" Content="˄" Width="20" Click="cmdUp_Click" Height="11" VerticalAlignment="Top" VerticalContentAlignment="Top" FontSize="8" HorizontalAlignment="Left" />
+                    <Button x:Name="ButtonDown" Margin="0,1,3,0"  Content="˅" Width="20" Click="cmdDown_Click" Height="11" VerticalContentAlignment="Bottom" FontSize="8" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                </StackPanel>
+
             </Grid>
         </Border>
 
@@ -44,22 +57,40 @@
                 <MenuItem Header="Settings" Click="Settings_MouseDown" ToolTip="Opens the settings interface" />
             </MenuItem>
         </Menu>
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,25,0,5" VerticalAlignment="Stretch" Width="3" Background="#26A0A0A0" Height="auto"/>
-        <Label x:Name="LabelStatus" Content="Status:" Grid.Column="1" HorizontalAlignment="Left" Margin="332,0,0,0" VerticalAlignment="Top" Foreground="#BF000000"/>
-        <TabControl x:Name="TabControlMain" Margin="7,25,5,5" Grid.Column="1" SelectionChanged="TabControlMain_SelectionChanged">
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" VerticalContentAlignment="Stretch" Margin="0,25,0,5" VerticalAlignment="Stretch" Width="3" Background="#26A0A0A0" Height="auto" Grid.RowSpan="2"/>
+        <TabControl x:Name="TabControlMain" Margin="7,25,5,7" Grid.Column="1" Grid.Row="0" SelectionChanged="TabControlMain_SelectionChanged">
             <TabItem x:Name="TabEditor" Header="Filter">
                 <Grid Background="#FFE5E5E5">
                     <avalonedit:TextEditor x:Name="AvalonFilter" FontFamily="Tahoma" FontSize="10pt" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="TabCreator" Header="Creator">
-                <Grid x:Name="FilterGrid" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" MouseEnter="FilterGrid_MouseEnter" MouseWheel="FilterGrid_MouseWheel">
-                    <local:DragCanvas x:Name="DragCanvas" SizeChanged="DragCanvas_SizeChanged"/>
+                <Grid x:Name="FilterGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" MouseEnter="FilterGrid_MouseEnter" MouseWheel="FilterGrid_MouseWheel" MouseRightButtonDown="DragCanvas_MouseRightButtonDown" Margin="0,0,0,1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*" />
+                        <RowDefinition Height="2" />
+                        <RowDefinition Height="*" MaxHeight="117" />
+                    </Grid.RowDefinitions>
+                    <local:DragCanvas x:Name="DragCanvas" Grid.Row="0" SizeChanged="DragCanvas_SizeChanged" Margin="0,0,0,11" ClipToBounds="True"/>
+
+                    <GridSplitter Grid.Row="1" Height="2" HorizontalAlignment="Stretch" />
+
+                    <Canvas Grid.Row="2" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" >
+                        <Label x:Name="LabelTitle" Content="Title:" Canvas.Left="10" Canvas.Top="30"/>
+                        <RadioButton x:Name="RadioShow" Content="Show  /" Canvas.Left="10" Canvas.Top="10" IsChecked="True"/>
+                        <RadioButton x:Name="RadioHide" Content="Hide" Canvas.Left="74" Canvas.Top="10"/>
+                        <Label x:Name="LabelDescription" Content="Discription:" Canvas.Left="10" Canvas.Top="56"/>
+                        <TextBox x:Name="TextBoxTitle" Height="23" Canvas.Left="84" TextWrapping="Wrap" Canvas.Top="34" Width="160" TextChanged="TextBoxTitle_TextChanged"/>
+                        <TextBox x:Name="TextBoxDescription" Height="55" Canvas.Left="84" TextWrapping="Wrap" Canvas.Top="62" Width="160"/>
+                        <Button x:Name="ButtonUpdateFilterObject" Content="Apply" Canvas.Left="629" Canvas.Top="87" Width="75" Click="ButtonUpdateFilterObject_Click"/>
+                        <ScrollViewer Canvas.Left="249" Canvas.Top="10" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Width="375" HorizontalAlignment="Left" >
+                            <StackPanel x:Name="StackPanelConditions" Height="107" Width="365" CanVerticallyScroll="True"/>
+                        </ScrollViewer>
+                    </Canvas>
 
                 </Grid>
             </TabItem>
         </TabControl>
-        <Slider x:Name="SliderZoom" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Right" Width="131" Grid.Column="1" Margin="458,26,0,0" Visibility="Hidden" Value="5"/>
-
+        <Slider x:Name="SliderZoom" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Right" Width="131" Grid.Column="1" Margin="0,26,10,0" Value="1" ValueChanged="SliderZoom_ValueChanged" LargeChange="0.1" Maximum="1.5" TickFrequency="0.1" Minimum="0.8"/>
     </Grid>
 </Window>

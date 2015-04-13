@@ -132,6 +132,7 @@ namespace PathOfFilters
                     {
                         this.elementBeingDragged = value;
                         this.elementBeingDragged.CaptureMouse();
+                        BringToFront(ElementBeingDragged);
                     }
                     else
                         this.elementBeingDragged = null;
@@ -154,6 +155,7 @@ namespace PathOfFilters
                 else
                     depObj = LogicalTreeHelper.GetParent(depObj);
             }
+            if (depObj != null && depObj.GetType() != typeof (FilterObject)) return null;
             return depObj as UIElement;
         }
 
@@ -172,8 +174,7 @@ namespace PathOfFilters
             this.isDragInProgress = false;
             this.origCursorLocation = e.GetPosition(this);
             this.ElementBeingDragged = this.FindCanvasChild(e.Source as DependencyObject);
-            if (this.ElementBeingDragged == null)
-                return;
+            if (this.ElementBeingDragged == null) return;
 
             double left = Canvas.GetLeft(this.ElementBeingDragged);
             double right = Canvas.GetRight(this.ElementBeingDragged);
@@ -184,6 +185,7 @@ namespace PathOfFilters
             e.Handled = true;
 
             this.isDragInProgress = true;
+
         }
 
         #endregion
@@ -253,13 +255,50 @@ namespace PathOfFilters
         #region OnHostPreviewMouseUp
         protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
         {
+            if (ElementBeingDragged == null) return;
+            var replacement = FindControlBellow();
+            var order = ((FilterObject) ElementBeingDragged).Order;
+            if (replacement != null)
+            {
+                ((FilterObject) ElementBeingDragged).Order = replacement.Order;
+                replacement.Order = order;
+            }
             base.OnPreviewMouseUp(e);
             this.ElementBeingDragged = null;
+
+            MainWindow.GetSingleton().SnapToGrid();
         }
 
         #endregion
         #endregion
         #region Private Helpers
+
+        #region FindControlBellow
+
+        private FilterObject FindControlBellow()
+        {
+            if (ElementBeingDragged == null) return null;
+            var location = ElementBeingDragged.PointToScreen(new Point(0d, 0d));
+            double area = 0.0;
+            FilterObject controlFilterObject = null;
+            foreach (UIElement control in Children)
+            {
+                if (control.GetType() != typeof(FilterObject)) return null;
+                if ((FilterObject)control == (FilterObject)ElementBeingDragged) continue;
+                var elemRect = new Rect(location, ElementBeingDragged.RenderSize);
+                var contRect = new Rect(control.PointToScreen(new Point(0d, 0d)), control.RenderSize);
+                elemRect.Intersect(contRect);
+                var rectangleArea = elemRect.Width*elemRect.Height;
+                if (rectangleArea < 10000 && rectangleArea > area)
+                {
+                    area = rectangleArea;
+                    controlFilterObject = (FilterObject)control;
+                }
+            }
+            return controlFilterObject ?? null;
+        }
+
+        #endregion
         #region CalculateDragElementRect
         private Rect CalculateDragElementRect(double newHorizOffset, double newVertOffset)
         {

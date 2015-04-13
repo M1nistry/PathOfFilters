@@ -9,7 +9,7 @@
     <Grid>
         <Border x:Name="UserBorder" BorderBrush="Black" BorderThickness="1" VerticalAlignment="Top">
             <Grid MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave" Margin="0" Width="148">
-                <ListView x:Name="FilterListView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Margin="0,0,0,0" FontSize="9" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" BorderBrush="#00828790" Width="150" Height="25" VerticalAlignment="Top">
+                <ListView x:Name="FilterListView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Margin="0,0,0,0" FontSize="9" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" BorderBrush="#00828790" Width="150" Height="25" VerticalAlignment="Top" Foreground="Black">
                     <ListView.View>
                         <GridView ColumnHeaderContainerStyle="{StaticResource ListViewHeader}">
                             <GridViewColumn Header="Condition" Width="85" DisplayMemberBinding="{Binding Name}"/>

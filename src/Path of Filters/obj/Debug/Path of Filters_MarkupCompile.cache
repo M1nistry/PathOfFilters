@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\obj\Debug\
-Path_of_Filters
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\obj\Debug\
+PathOfFilters
 none
 false
 DEBUG;TRACE
-c:\users\m1nistry\documents\visual studio 2013\Projects\Path of Filters\Path of Filters\App.xaml
-11151548125
-
-5-2017746502
-121654848548
-MainWindow.xaml;
+C:\Users\M1nistry\Documents\Visual Studio 2013\Projects\Path of Filters\src\Path of Filters\App.xaml
+51149730789
+2-85161380
+20-1670958658
+29862727815
+AddFilter.xaml;Autocomplete.xaml;FilterObject.xaml;MainWindow.xaml;Settings.xaml;
 
 False
 

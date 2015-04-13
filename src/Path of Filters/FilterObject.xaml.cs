@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Mono.CSharp;
 
 namespace PathOfFilters
 {
@@ -20,6 +23,8 @@ namespace PathOfFilters
         private Point clickPosition;
         private DispatcherTimer _animationTimer;
         private bool _isExpaned;
+        private MainWindow _main;
+        private HitTestResult result;
         public int Order
         {
             get
@@ -30,6 +35,8 @@ namespace PathOfFilters
             set { LabelId.Content = value; }
         }
 
+        public int Id { get; set; }
+
         public string Title
         {
             get { return LabelTitle.Content != null ? LabelTitle.Content.ToString() : ""; }
@@ -38,17 +45,60 @@ namespace PathOfFilters
 
         public string Description { get; set; }
 
+        private ObservableCollection<FilterCondition> _conditions {
+            get
+            {
+                var collection = new ObservableCollection<FilterCondition>();
+                foreach (var item in Conditions)
+                {
+                    collection.Add(item);
+                }
+                return collection;
+            } 
+        } 
+
         public List<FilterCondition> Conditions
         {
-            get { return new List<FilterCondition>(); }
+            get
+            {
+                var filterList = new List<FilterCondition>();
+                foreach (var item in FilterListView.Items)
+                {
+                    if (item.GetType() != typeof(FilterCondition)) continue;
+                    filterList.Add((FilterCondition)item);
+                }
+                return filterList;
+            }
             set
             {
-                foreach (var condition in value)
+                foreach (var item in value)
                 {
-                    FilterListView.Items.Add(condition);
-                    HandleColor(condition);
+                    if (!FilterListView.Items.Contains(item))FilterListView.Items.Add(item);
+                    HandleColor(item);
                 }
             }
+        }
+
+        public ObservableCollection<FilterCondition> ObservableConditions
+        {
+            get { return _conditions; }
+            set { value = _conditions; }
+        }
+
+        public ObservableCollection<string> ObservableClass 
+        {
+            get
+            {
+                var collectionString = new[]
+                {
+                    "ItemLevel", "DropLevel", "Quality", "Rarity", "Class",
+                    "BaseType", "Sockets", "LinkedSockets", "SocketGroup",
+                    "SetBorderColor", "SetTextColor", "SetBackgroundColor",
+                    "PlayAlertSound"
+                };
+
+                return new ObservableCollection<string>(collectionString);
+            }   
         }
 
         public bool Show { get; set; }
@@ -60,6 +110,18 @@ namespace PathOfFilters
             MouseLeftButtonUp += Control_MouseLeftButtonUp;
             MouseMove += Control_MouseMove;
             DataContext = this;
+            _main = MainWindow.GetSingleton();
+        }
+
+        public bool UpdateObject(FilterObject newObj)
+        {
+            Title = newObj.Title;
+            Description = newObj.Description;
+            Order = newObj.Order;
+            Id = newObj.Id;
+            Conditions = newObj.Conditions;
+
+            return true;
         }
 
         private void Control_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -77,6 +139,12 @@ namespace PathOfFilters
             var draggableControl = sender as UserControl;
             if (draggableControl == null) return;
             draggableControl.ReleaseMouseCapture();
+            _main.TextBoxTitle.Text = Title;
+            _main.TextBoxDescription.Text = Description;
+            _main.RadioShow.IsChecked = Show;
+            _main.RadioHide.IsChecked = !Show;
+            _main.PopulateFilter(this);
+            _main.selectedFilter = this;
         }
 
         private void Control_MouseMove(object sender, MouseEventArgs e)

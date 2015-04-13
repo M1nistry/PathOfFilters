@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 
 namespace PathOfFilters
@@ -14,5 +15,21 @@ namespace PathOfFilters
             "ItemLevel", "DropLevel", "Quality", "Rarity", "Class", "BaseType", "Sockets", "LinkedSockets", "SocketGroup",
             "PlayAlertSound", "SetBackgroundColor", "SetTextColor", "SetBorderColor"
         };
+
+        public ObservableCollection<string> ObservableClass
+        {
+            get
+            {
+                var collectionString = new[]
+                {
+                    "ItemLevel", "DropLevel", "Quality", "Rarity", "Class",
+                    "BaseType", "Sockets", "LinkedSockets", "SocketGroup",
+                    "SetBorderColor", "SetTextColor", "SetBackgroundColor",
+                    "PlayAlertSound"
+                };
+
+                return new ObservableCollection<string>(collectionString);
+            }
+        }
     }
 }
