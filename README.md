@@ -1,5 +1,14 @@
 # PathOfFilters
-Path Of Filters - Path of Exile Item Filter creator
+Path Of Filters - Desktop Item Filter Generator/Manager
+
+![Screenshot](http://i.imgur.com/jDAHYrD.png)
+
+# Features
+- Syntax highlighting text editor
+- Intellisense for Conditions and Item bases
+- Filter version control, optional auto filter updating (using pastebin).
+- Quickly switch between various filters
+- Graphical design UI
 
 
 Using
