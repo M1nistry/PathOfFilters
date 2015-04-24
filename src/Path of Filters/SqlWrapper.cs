@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SQLite;
 using System.IO;
 using System.Windows;
@@ -14,7 +15,7 @@ namespace PathOfFilters
 
         internal SqlWrapper()
         {
-            var constring = new SQLiteConnectionStringBuilder()
+            var constring = new SQLiteConnectionStringBuilder
             {
                 ConnectionString = String.Format("Data source={0};Version=3;", _dbPath)
             };
@@ -41,6 +42,28 @@ namespace PathOfFilters
                                 `tag` TEXT, `filter` TEXT, `version` INTEGER, `pastebin` TEXT);";
                     cmd.CommandText = createFilters;
                     cmd.ExecuteNonQuery();
+
+                    const string createFilterObject = @"CREATE TABLE IF NOT EXISTS `filter_objects` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, 
+                                        `description` text, `order` INTEGER, `show` TINYINT);";
+                    cmd.CommandText = createFilterObject;
+                    cmd.ExecuteNonQuery();
+
+                    const string createObjects = @"CREATE TABLE IF NOT EXISTS `filter_conditions` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `filter_id` INTEGER, 
+                                        `condition` TEXT, `value` TEXT);";
+                    cmd.CommandText = createObjects;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void ClearTable(string table)
+        {
+            using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
+            {
+                var dropTable = String.Format(@"DROP TABLE `{0}`", table);
+                using (var cmd = new SQLiteCommand(dropTable, connection))
+                {
+                    
                 }
             }
         }
@@ -120,6 +143,114 @@ namespace PathOfFilters
                 }
             }
             return filterList;
+        }
+
+        internal int CreateObjects(List<FilterObject> filterObjects)
+        {
+            var objectId = 0;
+            using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
+            {
+                const string insertObject = @"INSERT INTO `filter_objects` (title, description, order, show) VALUES 
+                                (@title, @description, @order, @show);";
+                var transaction = connection.BeginTransaction();
+                using (var cmd = new SQLiteCommand(insertObject, connection))
+                {
+                    cmd.Parameters.AddWithValue("@title", "");
+                    cmd.Parameters.AddWithValue("@description", "");
+                    cmd.Parameters.AddWithValue("@order", "");
+                    cmd.Parameters.AddWithValue("@show", "");
+                    foreach (var filterObject in filterObjects)
+                    {
+                        cmd.Parameters["@title"].Value = filterObject.Title;
+                        cmd.Parameters["@description"].Value = filterObject.Description;
+                        cmd.Parameters["@order"].Value = filterObject.Order;
+                        cmd.Parameters["@show"].Value = filterObject.Show;
+                        cmd.ExecuteNonQuery();
+                        var lastId = connection.LastInsertRowId;
+                        if (int.TryParse(lastId.ToString(), out objectId))
+                        {
+                            filterObject.Id = objectId;
+                            CreateObjectConditions(filterObject, connection);
+                        }
+                    }
+                }
+                transaction.Commit();
+            }
+            return objectId;
+        }
+
+        private static void CreateObjectConditions(FilterObject filterObject, SQLiteConnection connection)
+        {
+            const string insertConditions = @"INSERT INTO `filter_conditions` (filter_id, condition, value) VALUES 
+                                (@id, @condition, @value);";
+            using (var cmd = new SQLiteCommand(insertConditions, connection))
+            {
+                cmd.Parameters.AddWithValue("@id", filterObject.Id);
+                cmd.Parameters.AddWithValue("@condition", "");
+                cmd.Parameters.AddWithValue("@value", "");
+                foreach (var condition in filterObject.Conditions)
+                {
+                    cmd.Parameters["@condition"].Value = condition.Name;
+                    cmd.Parameters["@value"].Value = condition.Value;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        internal List<FilterObject> GetFilterObjects()
+        {
+            var filterList = new List<FilterObject>();
+            using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
+            {
+                const string selectObjects = @"SELECT * FROM `filter_objects`;";
+                using (var cmd = new SQLiteCommand(selectObjects, connection))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int id, order;
+                            var newObject = new FilterObject
+                            {
+                                Id = int.TryParse(reader["id"].ToString(), out id) ? id : -1,
+                                Title = reader["title"].ToString(),
+                                Description = reader["description"].ToString(),
+                                Order = int.TryParse(reader["order"].ToString(), out order) ? order : -1,
+                                Show = reader["show"].ToString() == "1",
+                            };
+                            newObject.Conditions = GetFilterConditions(id);
+                            filterList.Add(newObject);
+                        }
+                    }
+                }
+            }
+            return filterList;
+        }
+
+        private List<FilterCondition> GetFilterConditions(int id)
+        {
+            var conditionList = new List<FilterCondition>();
+            using (var connection = new SQLiteConnection(_connection).OpenAndReturn())
+            {
+                const string selectConditions = @"SELECT condition, value FROM `filter_condition` WHERE filter_id=@id;";
+                using (var cmd = new SQLiteCommand(selectConditions, connection))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var newCondition = new FilterCondition
+                            {
+                                Name = reader["condition"].ToString(),
+                                Value = reader["value"].ToString()
+                            };
+                            conditionList.Add(newCondition);
+                        }
+                    }
+                }
+            }
+            return conditionList;
         }
     }
 }

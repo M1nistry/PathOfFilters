@@ -219,7 +219,7 @@ namespace PathOfFilters
             var r = new Regex(strRegex, RegexOptions.Multiline);
             var order = 1;
             var id = 1;
-
+            var filterList = new List<FilterObject>();
             foreach (var match in r.Matches(AvalonFilter.Text).Cast<Match>().Where(match => match.Success))
             {
                 var newFilterObject = new FilterObject { Order = order };
@@ -255,10 +255,22 @@ namespace PathOfFilters
                 newFilterObject.DataContext = conditionList;
                 newFilterObject.Name = "Filter" + newFilterObject.Order;
                 newFilterObject.Id = id;
-                DragCanvas.Children.Add(newFilterObject);
+                filterList.Add(newFilterObject);
+                
                 id++;
                 order++;
-            } 
+            }
+            _sql.CreateObjects(filterList);
+            PopulateCanvas();
+        }
+
+        private void PopulateCanvas()
+        {
+            var filterObjects = _sql.GetFilterObjects();
+            foreach (var filterObject in filterObjects)
+            {
+                DragCanvas.Children.Add(filterObject);
+            }
         }
 
         public FilterCondition GetCondition(string line)
@@ -404,10 +416,10 @@ namespace PathOfFilters
             {
                 textBox.Text = condition.Value;
                 comboBox.Text = condition.Name;
-                dynamicGrid.Children.Add(comboBox);
-                dynamicGrid.Children.Add(textBox);
-                dynamicGrid.Children.Add(removeButton);
-                StackPanelConditions.Children.Add(dynamicGrid);
+                if (!dynamicGrid.Children.Contains(comboBox)) dynamicGrid.Children.Add(comboBox);
+                if (!dynamicGrid.Children.Contains(textBox)) dynamicGrid.Children.Add(textBox);
+                if (!dynamicGrid.Children.Contains(removeButton)) dynamicGrid.Children.Add(removeButton);
+                if (!StackPanelConditions.Children.Contains(dynamicGrid)) StackPanelConditions.Children.Add(dynamicGrid);
             }
             AddBlankRow();
         }
